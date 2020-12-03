@@ -1,0 +1,8 @@
+#BlueJ class context
+comment0.target=Hrac
+comment1.params=znak
+comment1.target=Hrac(char)
+comment1.text=\r\n\ @param\ znak\ konkr\u00E9tny\ znak,\ ktor\u00FDm\ chce\ dan\u00FD\ hr\u00E1\u010D\ hra\u0165\r\n
+comment2.params=
+comment2.target=char\ getZnak()
+numComments=3
