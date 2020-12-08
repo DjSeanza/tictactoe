@@ -43,61 +43,6 @@ public class HraciaPlocha {
     }
     
     /**
-     * Vracia hodnotu celej diagonály v podobe stringu.
-     * 
-     * @param zaciatokRiadku riadok, od ktorého chceme zisťovať diagonálu
-     * @param zaciatokStlpca stĺpec, od ktorého chceme zisťovať diagonálu
-     * @param jeZLava určuje, z ktorej strany budeme zisťovať diagonálu
-     * @return String vracia všetky znaky z diagonály v podobe reťazca
-     * 
-     */
-    public String getDiagonala(int zaciatokRiadku, int zaciatokStlpca, boolean jeZLava) {
-        if (zaciatokRiadku > this.riadok || zaciatokStlpca > this.stlpec) {
-            return null;
-        }
-        if (zaciatokRiadku < 1 || zaciatokStlpca < 1) {
-            return null;
-        }
-        
-        int diagonala = this.stlpec;
-        if (jeZLava) {
-            
-            if (zaciatokRiadku > 1 || zaciatokStlpca > 1) {
-                // určuje, koľkokrát sa má cyklus pre získanie znaku opakovať
-                diagonala -= (Math.abs(zaciatokRiadku - zaciatokStlpca));
-            }
-            
-        }
-        
-        if (!jeZLava) {
-            
-            if (zaciatokRiadku < this.riadok || zaciatokStlpca < this.stlpec) {
-                // určuje, koľkokrát sa má cyklus pre získanie znaku opakovať
-                diagonala = (Math.abs(zaciatokRiadku - zaciatokStlpca) + 1);
-            }
-            
-        }
-        
-        // odpočítava sa aby sa číslo rovnalo indexu v poli
-        zaciatokRiadku--; 
-        zaciatokStlpca--;
-        String znaky = "";
-        for (int i = 0; i < diagonala; i++) {
-            znaky += this.hraciaPlocha[zaciatokRiadku][zaciatokStlpca];
-            
-            zaciatokRiadku++;
-            if (jeZLava) {
-                zaciatokStlpca++;
-            }
-            if (!jeZLava) {
-                zaciatokStlpca--;
-            }
-            
-        }
-        return znaky;
-    }
-    
-    /**
      * @param hrac konkrétny hráč, pre ktorého chceme kontrolovať výherný stĺpec
      * @param stlpec konkrétny stĺpec, ktorý chceme skontrolovať
      * @return boolean vracia hodnotu true, ak sa daný počet znakov 
@@ -108,7 +53,7 @@ public class HraciaPlocha {
             char prvyZnak = this.hraciaPlocha[i][stlpec];
             char druhyZnak = this.hraciaPlocha[i + 1][stlpec];
             char tretiZnak = this.hraciaPlocha[i + 2][stlpec];
-            System.out.format("%s %s %s %d%n", prvyZnak, druhyZnak, tretiZnak, i);
+            //System.out.format("%s %s %s %d%n", prvyZnak, druhyZnak, tretiZnak, i);
             if (prvyZnak == hrac.getZnak() && prvyZnak == druhyZnak && prvyZnak == tretiZnak) {
                 return true;
             }
@@ -127,22 +72,7 @@ public class HraciaPlocha {
             char prvyZnak = this.hraciaPlocha[riadok][i];
             char druhyZnak = this.hraciaPlocha[riadok][i + 1];
             char tretiZnak = this.hraciaPlocha[riadok][i + 2];
-            System.out.format("%s %s %s %d%n", prvyZnak, druhyZnak, tretiZnak, i);
-            if (prvyZnak == hrac.getZnak() && prvyZnak == druhyZnak && prvyZnak == tretiZnak) {
-                return true;
-            }
-        }
-        return false;
-    }
-    
-    public boolean vyhraDiagonala(Hrac hrac, int zaciatokRiadku, int zaciatokStlpca) {
-        for (int i = 0; i < this.riadok - 2; i++) {
-            char prvyZnak = this.hraciaPlocha[zaciatokRiadku][zaciatokStlpca];
-            char druhyZnak = this.hraciaPlocha[zaciatokRiadku + 1][zaciatokStlpca + 1];
-            char tretiZnak = this.hraciaPlocha[zaciatokRiadku + 2][zaciatokStlpca + 2];
-            System.out.format("(%d %d) %s %s %s %d%n", zaciatokRiadku, zaciatokStlpca, prvyZnak, druhyZnak, tretiZnak, i);
-            zaciatokRiadku++;
-            zaciatokStlpca++;
+            //System.out.format("%s %s %s %d%n", prvyZnak, druhyZnak, tretiZnak, i);
             if (prvyZnak == hrac.getZnak() && prvyZnak == druhyZnak && prvyZnak == tretiZnak) {
                 return true;
             }
@@ -151,9 +81,60 @@ public class HraciaPlocha {
     }
     
     /**
+     * @param hrac konkrétny hráč, pre ktorého chceme kontrolovať výhernú diagonálu
+     * @param zaciatokRiadku od ktorého riadku chceme kontrolovať
+     * @param zaciatokStlpca od ktorého stĺpca chceme kontrolovať
+     * @param jeZLava určuje z ktorej strany chceme diagonálu kontrolovať
+     * @return boolean vracia hodnotu true, ak sa daný počet znakov 
+     * následujúcich za sebou rovná
+     */
+    public boolean vyhraDiagonala(Hrac hrac, int zaciatokRiadku, int zaciatokStlpca, boolean jeZLava) {
+        if (zaciatokRiadku > this.riadok || zaciatokStlpca > this.stlpec) {
+            return false;
+        }
+        if (zaciatokRiadku < 0 || zaciatokStlpca < 0) {
+            return false;
+        }
+        
+        int diagonala = this.riadok;
+        if (jeZLava) {
+            diagonala -= (Math.abs(zaciatokRiadku - zaciatokStlpca));
+        }
+        if (!jeZLava) {
+            diagonala = (Math.abs(zaciatokRiadku - zaciatokStlpca) + 1);
+        }
+        
+        for (int i = 0; i < diagonala - 2; i++) {
+            char prvyZnak = this.hraciaPlocha[zaciatokRiadku][zaciatokStlpca];
+            char druhyZnak = '.';
+            char tretiZnak = '.';
+            if (jeZLava) {
+                druhyZnak = this.hraciaPlocha[zaciatokRiadku + 1][zaciatokStlpca + 1];
+                tretiZnak = this.hraciaPlocha[zaciatokRiadku + 2][zaciatokStlpca + 2];
+                zaciatokStlpca++;
+            }
+            if (!jeZLava) {
+                druhyZnak = this.hraciaPlocha[zaciatokRiadku + 1][zaciatokStlpca - 1];
+                tretiZnak = this.hraciaPlocha[zaciatokRiadku + 2][zaciatokStlpca - 2];
+                zaciatokStlpca--;
+            }
+            //System.out.format("(%d %d) %s %s %s %d%n", zaciatokRiadku, zaciatokStlpca, prvyZnak, druhyZnak, tretiZnak, i);
+            
+            zaciatokRiadku++;
+
+            if (prvyZnak == hrac.getZnak() && prvyZnak == druhyZnak && prvyZnak == tretiZnak) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * @TODO - všetky this.riadok a this.stlpec dať na velkosť, keď to je štvorcové
+     * @TODO - pre vyhry robiť kontroly na riadky a stlpce, aby sa nedalo
+     * zadať zlé číslo (napr. viac ako pocet stlpcov a tak)
+     * @TODO - urobiť výhry na viac výherných, podľa toho, koľko si zadá používateľ
      * @TODO - spojiť výhry dokopy do jednej metódy
-     * @TODO - vyhraDiagonala()
-     * @TODO - výhry len s tromi znakmi nie celými riadkami a tak
      */
     
     /**
@@ -183,11 +164,15 @@ public class HraciaPlocha {
     
     /**
      * Vykreslíme hraciu plochu pomocou bodiek
+     * 
+     * @TODO - v hracej ploche nech sú indexy riadkov a stĺpcov na lepšiu orientáciu
      */
     public void setPolicka() {
         for (int aktualnyRiadok = 0; aktualnyRiadok < this.riadok; aktualnyRiadok++) {
             for (int aktualnyStlpec = 0; aktualnyStlpec < this.stlpec; aktualnyStlpec++) {
                 this.hraciaPlocha[aktualnyRiadok][aktualnyStlpec] = '.';
+                /*this.hraciaPlocha[0][aktualnyStlpec] = '1';
+                this.hraciaPlocha[aktualnyRiadok][0] = '1';*/
             }
         }
     }
@@ -202,9 +187,9 @@ public class HraciaPlocha {
         for (char[] plocha: this.hraciaPlocha) {
             for (char aktualny: plocha) {
                 if (a % this.stlpec == 0) {
-                    System.out.println(aktualny);
+                    System.out.format("%3s%n", aktualny);
                 } else {
-                    System.out.print(aktualny);
+                    System.out.format("%3s", aktualny);
                 }
                 a++;
             }
