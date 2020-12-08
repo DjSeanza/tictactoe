@@ -69,19 +69,36 @@ public class Hra {
      */
     public void vyhra() {
         for (Hrac aktualny: this.hraci) {
-            for (int i = 0; i < this.hraciaPlocha.getPocetRiadkov(); i++) {
+            for (int i = 0; i < this.hraciaPlocha.getVelkostPlochy(); i++) {
                 if (!this.vyhra) {
                     this.vyhra = this.hraciaPlocha.vyhraRiadok(aktualny, i);
                     this.vyherca = aktualny;
                 }
-            }
-            for (int i = 0; i < this.hraciaPlocha.getPocetStlpcov(); i++) {
                 if (!this.vyhra) {
                     this.vyhra = this.hraciaPlocha.vyhraStlpec(aktualny, i);
                     this.vyherca = aktualny;
                 }
+                if (!this.vyhra) {
+                    //System.out.format("%d%n", i);
+                    this.vyhra = this.hraciaPlocha.vyhraDiagonala(aktualny, 0, i, true);
+                    this.vyherca = aktualny;
+                }
+                if (!this.vyhra) {
+                    this.vyhra = this.hraciaPlocha.vyhraDiagonala(aktualny, i, 0, true);
+                    this.vyherca = aktualny;
+                }
+                if (!this.vyhra) {
+                    this.vyhra = this.hraciaPlocha.vyhraDiagonala(aktualny, 0, i, false);
+                    this.vyherca = aktualny;
+                }
+                if (!this.vyhra) {
+                    //System.out.format("%d%n", i);
+                    this.vyhra = this.hraciaPlocha.vyhraDiagonala(aktualny, i, this.hraciaPlocha.getVelkostPlochy() - 1, false);
+                    this.vyherca = aktualny;
+                }
             }
         }
+        //System.out.println(this.vyhra);
     }
     
     /**
@@ -97,10 +114,14 @@ public class Hra {
      */
     public void hra() {
         this.vyhra = false;
+        this.hraciaPlocha.setPolicka();
         
         while (!this.vyhra) {
             for (int i = 0; i < this.pocetHracov; i++) {
-                this.setPolickoPreHraca(i);
+                
+                if (!this.vyhra) {
+                    this.setPolickoPreHraca(i);
+                }
                 this.vyhra();
             }
         }

@@ -3,6 +3,7 @@ public class HraciaPlocha {
     private char[][] hraciaPlocha;
     private int stlpec;
     private int riadok;
+    private int velkostPlochy;
     private boolean zadaneSpravne;
     
     /**
@@ -15,6 +16,7 @@ public class HraciaPlocha {
     public HraciaPlocha(int velkost) {
         this.riadok = velkost;
         this.stlpec = velkost;
+        this.velkostPlochy = velkost;
         this.zadaneSpravne = true;
         
         for (int i = 0; i < velkost; i++) {
@@ -34,12 +36,8 @@ public class HraciaPlocha {
         return this.zadaneSpravne;
     }
     
-    public int getPocetStlpcov() {
-        return this.stlpec;
-    }
-    
-    public int getPocetRiadkov() {
-        return this.riadok;
+    public int getVelkostPlochy() {
+        return this.velkostPlochy;
     }
     
     /**
@@ -89,12 +87,13 @@ public class HraciaPlocha {
      * následujúcich za sebou rovná
      */
     public boolean vyhraDiagonala(Hrac hrac, int zaciatokRiadku, int zaciatokStlpca, boolean jeZLava) {
-        if (zaciatokRiadku > this.riadok || zaciatokStlpca > this.stlpec) {
+        if (zaciatokRiadku > this.velkostPlochy || zaciatokStlpca > this.velkostPlochy) {
             return false;
         }
         if (zaciatokRiadku < 0 || zaciatokStlpca < 0) {
             return false;
         }
+        
         
         int diagonala = this.riadok;
         if (jeZLava) {
