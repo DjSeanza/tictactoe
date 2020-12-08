@@ -11,21 +11,20 @@ public class Hra {
     private Scanner input = new Scanner(System.in);
     
     /**
-     * @param riadky počet riadkov hracej plochy
-     * @param stlpce počet stĺpcov hracej plochy
-     * @param pocetHracov počet hráčov
-     * 
-     * @TODO - ošetriť počet hráčov tak, aby ich na hracej ploche nebolo veľa
-     * 
      * Inicializujeme si základné hodnoty atribútov,
      * vytvoríme hraciu plochu a následne sa hráčov opýtame
      * aké znaky chcú používať pri hre (berie sa vždy len 
-     * prvý znak, ktorý zadajú)
+     * prvý znak, ktorý zadajú).
+     * 
+     * @param velkost je to veľkosť hracej plochy, plocha je vždy štvorcová
+     * @param pocetHracov počet hráčov
+     * 
+     * @TODO - ošetriť počet hráčov tak, aby ich na hracej ploche nebolo veľa
      */
-    public Hra(int riadky, int stlpce, int pocetHracov) { 
+    public Hra(int velkost, int pocetHracov) { 
         this.hraci = new ArrayList<Hrac>();
         
-        this.hraciaPlocha = new HraciaPlocha(riadky, stlpce);
+        this.hraciaPlocha = new HraciaPlocha(velkost);
         this.hraciaPlocha.setPolicka();
         this.hraciaPlocha.vypisPlochu();
         
@@ -39,13 +38,13 @@ public class Hra {
     }
     
     /**
+     * Opýtame sa hráča na riadok a stĺpec, do ktorého chce znak
+     * napísať a následne ho tam napíšeme pomocou metódy setPolicko().
+     * 
      * @param hrac konkrétny hráč, pre ktorého chceme nastaviť 
      * políčko na hodnotu znaku, ktorý si zadal
      * 
      * @TODO - kontrola, či zadali správne hodnoty pre riadok a stĺpec
-     * 
-     * Opýtame sa hráča na Riadok a stĺpec, do ktorého chce znak
-     * napísať a následne ho tam napíšeme pomocou metódy setPolicko()
      */
     public void setPolickoPreHraca(int hrac) {
         System.out.println("Kolo hráča: " + (hrac + 1));
@@ -62,11 +61,11 @@ public class Hra {
     }
     
     /**
+     * Po každom kole kontroluje riadky a stĺpce, či nevyhral niektorí z
+     * hráčov.
+     * 
      * @TODO - kontrola diagonály
      * @TODO - urobiť remízu
-     * 
-     * Po každom kole kontroluje riadky a stĺpce, či nevyhral niektorí z
-     * hráčov
      */
     public void vyhra() {
         for (Hrac aktualny: this.hraci) {
@@ -86,15 +85,15 @@ public class Hra {
     }
     
     /**
+     * Základná metóda, ktorá spúšťa celú hru. Hrá sa dokým sa atribút
+     * vyhra nerovná true. Po tom ako hráč vyhrá, vypíše sa kto
+     * vyhral a hra sa ukončí.
+     * 
      * @TODO - dať na výber na koľko v rade chce hrať (default 3)
      * @TODO - dať hráčovi na výber, na koľko výherných chce hrať
      * @TODO - pripočítanie výhry hráčovi a spustenie ďalšej hry
      * @TODO - po každej hre sa opýtať, či chceme pokračovať, ak nie, tak
      * vypísať výhercu a ukončiť hru
-     * 
-     * Základná metóda, ktorá spúšťa celú hru. Hrá sa dokým sa atribút
-     * vyhra nerovná true. Po tom ako hráč vyhrá, vypíše sa kto
-     * vyhral a hra sa ukončí.
      */
     public void hra() {
         this.vyhra = false;
