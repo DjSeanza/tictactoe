@@ -1,9 +1,8 @@
 
 public class HraciaPlocha {
     private char[][] hraciaPlocha;
-    private int stlpec;
-    private int riadok;
     private int velkostPlochy;
+    private int pocetVyhernych;
     private boolean zadaneSpravne;
     
     /**
@@ -13,10 +12,9 @@ public class HraciaPlocha {
      * 
      * @param velkost je to veľkosť hracej plochy, plocha je vždy štvorcová
      */
-    public HraciaPlocha(int velkost) {
-        this.riadok = velkost;
-        this.stlpec = velkost;
+    public HraciaPlocha(int velkost, int pocetVyhernych) {
         this.velkostPlochy = velkost;
+        this.pocetVyhernych = pocetVyhernych;
         this.zadaneSpravne = true;
         
         for (int i = 0; i < velkost; i++) {
@@ -25,8 +23,7 @@ public class HraciaPlocha {
                     this.hraciaPlocha = new char[velkost][velkost];
                 } else {
                     this.hraciaPlocha = new char[3][3];
-                    this.riadok = 3;
-                    this.stlpec = 3;
+                    this.velkostPlochy = 3;
                 }
             }
         }
@@ -47,7 +44,7 @@ public class HraciaPlocha {
      * následujúcich za sebou rovná
      */
     public boolean vyhraStlpec(Hrac hrac, int stlpec) {
-        for (int i = 0; i < this.riadok - 2; i++) {
+        for (int i = 0; i < this.velkostPlochy - (this.pocetVyhernych - 1); i++) {
             char prvyZnak = this.hraciaPlocha[i][stlpec];
             char druhyZnak = this.hraciaPlocha[i + 1][stlpec];
             char tretiZnak = this.hraciaPlocha[i + 2][stlpec];
@@ -66,7 +63,7 @@ public class HraciaPlocha {
      * následujúcich za sebou rovná
      */
     public boolean vyhraRiadok(Hrac hrac, int riadok) {        
-        for (int i = 0; i < this.stlpec - 2; i++) {
+        for (int i = 0; i < this.velkostPlochy - (this.pocetVyhernych - 1); i++) {
             char prvyZnak = this.hraciaPlocha[riadok][i];
             char druhyZnak = this.hraciaPlocha[riadok][i + 1];
             char tretiZnak = this.hraciaPlocha[riadok][i + 2];
@@ -95,7 +92,7 @@ public class HraciaPlocha {
         }
         
         
-        int diagonala = this.riadok;
+        int diagonala = this.velkostPlochy;
         if (jeZLava) {
             diagonala -= (Math.abs(zaciatokRiadku - zaciatokStlpca));
         }
@@ -103,7 +100,7 @@ public class HraciaPlocha {
             diagonala = (Math.abs(zaciatokRiadku - zaciatokStlpca) + 1);
         }
         
-        for (int i = 0; i < diagonala - 2; i++) {
+        for (int i = 0; i < diagonala - (this.pocetVyhernych - 1); i++) {
             char prvyZnak = this.hraciaPlocha[zaciatokRiadku][zaciatokStlpca];
             char druhyZnak = '.';
             char tretiZnak = '.';
@@ -129,7 +126,21 @@ public class HraciaPlocha {
     }
     
     /**
-     * @TODO - všetky this.riadok a this.stlpec dať na velkosť, keď to je štvorcové
+     * @return boolean vracia hodnotu true, ak je celá plocha zaplnená
+     * znakmi rôznymi od '.' (t.j. celá plocha je zaplnená znakmi od hráčov).
+     */
+    public boolean jeZaplnena() {
+        for (int i = 0; i < this.velkostPlochy; i++) {
+            for (int j = 0; j < this.velkostPlochy; j++) {
+                if (this.hraciaPlocha[i][j] == '.') {
+                    return false;
+                }
+            }   
+        }
+        return true;
+    }
+    
+    /**
      * @TODO - pre vyhry robiť kontroly na riadky a stlpce, aby sa nedalo
      * zadať zlé číslo (napr. viac ako pocet stlpcov a tak)
      * @TODO - urobiť výhry na viac výherných, podľa toho, koľko si zadá používateľ
@@ -147,7 +158,7 @@ public class HraciaPlocha {
      * zabranie si políčka (napríklad hodenie mincou alebo kameň, papier, nožnice)
      */
     public void setPolicko(int riadok, int stlpec, Hrac hrac) {
-        if (riadok > this.riadok || stlpec > this.stlpec) {
+        if (riadok > this.velkostPlochy || stlpec > this.velkostPlochy) {
             System.out.println("Zle zadaný riadok alebo stĺpec");
             return;
         }
@@ -167,30 +178,28 @@ public class HraciaPlocha {
      * @TODO - v hracej ploche nech sú indexy riadkov a stĺpcov na lepšiu orientáciu
      */
     public void setPolicka() {
-        for (int aktualnyRiadok = 0; aktualnyRiadok < this.riadok; aktualnyRiadok++) {
-            for (int aktualnyStlpec = 0; aktualnyStlpec < this.stlpec; aktualnyStlpec++) {
-                this.hraciaPlocha[aktualnyRiadok][aktualnyStlpec] = '.';
-                /*this.hraciaPlocha[0][aktualnyStlpec] = '1';
-                this.hraciaPlocha[aktualnyRiadok][0] = '1';*/
+        for (int riadok = 0; riadok < this.velkostPlochy; riadok++) {
+            for (int stlpec = 0; stlpec < this.velkostPlochy; stlpec++) {
+                this.hraciaPlocha[riadok][stlpec] = '.';
+                /*this.hraciaPlocha[0][stlpec] = '1';
+                this.hraciaPlocha[riadok][0] = '1';*/
             }
         }
     }
     
     /**
      * Vypíšeme hraciu plochu
-     * 
-     * @TODO - pomenovať si premennú a nejako normálne
      */
     public void vypisPlochu() {
-        int a = 1;
+        int sirkaPlochy = 1;
         for (char[] plocha: this.hraciaPlocha) {
             for (char aktualny: plocha) {
-                if (a % this.stlpec == 0) {
+                if (sirkaPlochy % this.velkostPlochy == 0) {
                     System.out.format("%3s%n", aktualny);
                 } else {
                     System.out.format("%3s", aktualny);
                 }
-                a++;
+                sirkaPlochy++;
             }
         }
     }
