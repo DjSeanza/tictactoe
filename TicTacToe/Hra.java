@@ -19,6 +19,7 @@ public class Hra {
      * @param velkost je to veľkosť hracej plochy, plocha je vždy štvorcová
      * @param pocetHracov počet hráčov
      * 
+     * @TODO - aby hráč nemohol pridať rovnaký znak ako ma iný hráč
      * @TODO - ošetriť počet hráčov tak, aby ich na hracej ploche nebolo veľa
      */
     public Hra(int velkost, int pocetVyhernych, int pocetHracov) { 
@@ -26,7 +27,7 @@ public class Hra {
         
         this.hraciaPlocha = new HraciaPlocha(velkost, pocetVyhernych);
         this.hraciaPlocha.setPolicka();
-        this.hraciaPlocha.vypisPlochu();
+        this.hraciaPlocha.vypisPlochu();        
         
         for (int i = 0; i < pocetHracov; i++) {
             System.out.println("Znak hráča: " + (i + 1));
@@ -55,14 +56,13 @@ public class Hra {
         
         this.hraciaPlocha.setPolicko(riadok, stlpec, this.hraci.get(hrac));
         this.hraciaPlocha.vypisPlochu();
-        if (!this.hraciaPlocha.polickoZadaneSpravne()) {
+        if (!this.hraciaPlocha.jePolickoZadaneSpravne()) {
             this.setPolickoPreHraca(hrac);
         }
     }
     
     /**
-     * Po každom kole kontroluje riadky a stĺpce, či nevyhral niektorí z
-     * hráčov.
+     * Po každom kole kontroluje riadky a stĺpce, či nevyhral niektorí z hráčov.
      * 
      * @TODO - urobiť remízu
      * @TODO - fujky metóda, treba ju upraviť
@@ -71,11 +71,13 @@ public class Hra {
         for (Hrac aktualny: this.hraci) {
             for (int i = 0; i < this.hraciaPlocha.getVelkostPlochy(); i++) {
                 if (!this.koniecHry) {
-                    this.koniecHry = this.hraciaPlocha.vyhraRiadok(aktualny, i);
+                    // true značí, že ide o kontrolu riadku
+                    this.koniecHry = this.hraciaPlocha.vyhraRiadokStlpec(aktualny, i, i, true);
                     this.vyherca = aktualny;
                 }
                 if (!this.koniecHry) {
-                    this.koniecHry = this.hraciaPlocha.vyhraStlpec(aktualny, i);
+                    // false značí, že ide o kontrolu stĺpca
+                    this.koniecHry = this.hraciaPlocha.vyhraRiadokStlpec(aktualny, i, i, false);
                     this.vyherca = aktualny;
                 }
                 if (!this.koniecHry) {
@@ -93,6 +95,11 @@ public class Hra {
                 }
                 if (!this.koniecHry) {
                     //System.out.format("%d%n", i);
+                    
+                    /* 
+                     * this.hraciaPlocha.getVelkostPlochy() - 1 
+                     * je to kvôli tomu, aby sa kontrolovalo stále od posledného stĺpca
+                     */
                     this.koniecHry = this.hraciaPlocha.vyhraDiagonala(aktualny, i, this.hraciaPlocha.getVelkostPlochy() - 1, false);
                     this.vyherca = aktualny;
                 }
@@ -113,8 +120,6 @@ public class Hra {
      * koniecHry nerovná true. Po tom ako hráč vyhrá, vypíše sa kto
      * vyhral a hra sa ukončí.
      * 
-     * @TODO - dať na výber na koľko v rade chce hrať (default 3)
-     * @TODO - dať hráčovi na výber, na koľko výherných chce hrať
      * @TODO - pripočítanie výhry hráčovi a spustenie ďalšej hry
      * @TODO - po každej hre sa opýtať, či chceme pokračovať, ak nie, tak
      * vypísať výhercu a ukončiť hru

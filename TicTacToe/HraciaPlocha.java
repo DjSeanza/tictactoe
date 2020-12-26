@@ -14,19 +14,24 @@ public class HraciaPlocha {
      * @param pocetVyhernych určuje na koľko výherných políčok sa bude hrať
      */
     public HraciaPlocha(int velkost, int pocetVyhernych) {
-        // kvôli riadku a stĺpcu s číslami musíme pričítať ešte jeden riadok a stĺpec
-        this.velkostPlochy = velkost + 1;
-        this.pocetVyhernych = pocetVyhernych;
+        if (velkost > 3 && velkost < 14) {
+            // kvôli riadku a stĺpcu s číslami musíme pričítať ešte jeden riadok a stĺpec
+            this.velkostPlochy = velkost + 1;
+        } else {
+            this.velkostPlochy = 4;
+        }
+        
+        if (pocetVyhernych > 0 && pocetVyhernych <= velkost) {
+            this.pocetVyhernych = pocetVyhernych;
+        } else {
+            this.pocetVyhernych = 3;
+        }
+        
         this.zadaneSpravne = true;
         
         for (int i = 0; i < velkost; i++) {
             for (int j = 0; j < velkost; j++) {
-                if (velkost > 2 && velkost < 13) {
-                    this.hraciaPlocha = new char[this.velkostPlochy][this.velkostPlochy];
-                } else {
-                    this.hraciaPlocha = new char[4][4];
-                    this.velkostPlochy = 4;
-                }
+                this.hraciaPlocha = new char[this.velkostPlochy][this.velkostPlochy];
             }
         }
     }
@@ -42,38 +47,58 @@ public class HraciaPlocha {
         return this.velkostPlochy;
     }
     
+    /**
+     * Kontroluje, či sa v danej bunke nachádza znak daného hráča.
+     * 
+     * @param hrac hráč, pre ktorého chceme kontrolovať bunku
+     * @param riadok riadok v ktorom budeme kontrolovať bunku
+     * @param stlpec stĺpec v ktorom budeme kontrolovať bunku
+     * @return boolean vráti hodnotu true ak daná bunka obsahuje znak daného hráča
+     */
     public boolean vyhraBunka(Hrac hrac, int riadok, int stlpec) {
         return this.hraciaPlocha[riadok][stlpec] == hrac.getZnak();
     }
     
     /**
-     * Kontroluje, či je daný stĺpec výherný.
+     * Kontroluje či je daný riadok alebo stĺpec výherný.
      * 
-     * @param hrac konkrétny hráč, pre ktorého chceme kontrolovať výherný stĺpec
-     * @param stlpec konkrétny stĺpec, ktorý chceme skontrolovať
-     * @return boolean vracia hodnotu true, ak sa daný počet znakov 
-     * následujúcich za sebou rovná
+     * @param hrac hráč, pre ktorého chceme kontrolovať riadok a stĺpec
+     * @param riadok konkrétny riadok, ktorý chceme skontrolovať
+     * @param stlpec stĺpec, ktorý chceme skontrolovať
+     * @param jeRiadok určuje, či sa jedná o riadok alebo stĺpec
+     * @return boolean vracia hodnotu true, ak sa určitý počet znakov následujúcich za sebou rovná
      */
-    public boolean vyhraStlpec(Hrac hrac, int stlpec) {
+    public boolean vyhraRiadokStlpec(Hrac hrac, int riadok, int stlpec, boolean jeRiadok) {
+        if (riadok < 0 || riadok > this.velkostPlochy || stlpec < 0 || stlpec > this.velkostPlochy) {
+            System.out.println("Zle zadaný riadok alebo stĺpec.");
+            return false;
+        }
+        
+        //char[] plocha = new char[this.pocetVyhernych];
+        
         for (int i = 0; i < this.velkostPlochy - (this.pocetVyhernych - 1); i++) {
-            //char[] plocha = new char[this.pocetVyhernych];
             int vyhra = 0;
             
             for (int j = 0; j < this.pocetVyhernych; j++) {
                 
-                if (this.vyhraBunka(hrac, i + j, stlpec)) {
-                    vyhra++;
+                if (jeRiadok) {
+                    if (this.vyhraBunka(hrac, riadok, i + j)) {
+                        vyhra++;
+                    }
                 }
-                
-                /*plocha[j] = this.hraciaPlocha[i + j][stlpec];
-                System.out.format("(%d %d) %d%n", i, j, vyhra);*/
+                if (!jeRiadok) {
+                    if (this.vyhraBunka(hrac, i + j, stlpec)) {
+                        vyhra++;
+                    }
+                }
                 
                 if (vyhra == this.pocetVyhernych) {
                     return true;
                 }
                 
+                /*plocha[j] = this.hraciaPlocha[riadok + j][stlpec + j];
+                System.out.format("(%d %d)(%d %d) %d%n", i, j, riadok + j, stlpec + j, vyhra);*/
             }
-            
             /*for (int h = 0; h < plocha.length; h++) {
                 System.out.print("[" + plocha[h] + "]");
             }
@@ -83,33 +108,8 @@ public class HraciaPlocha {
     }
     
     /**
-     * Kontroluje, či je daný riadok výherný. 
+     * Kontroluje diagonálu, či je výherná.
      * 
-     * @param hrac konkrétny hráč, pre ktorého chceme kontrolovať výherný riadok
-     * @param riadok konkrétny riadok, ktorý chceme skontrolovať
-     * @return boolean vracia hodnotu true, ak sa daný počet znakov 
-     * následujúcich za sebou rovná
-     */
-    public boolean vyhraRiadok(Hrac hrac, int riadok) {        
-        for (int i = 0; i < this.velkostPlochy - (this.pocetVyhernych - 1); i++) {
-            int vyhra = 0;
-            
-            for (int j = 0; j < this.pocetVyhernych; j++) {
-                
-                if (this.vyhraBunka(hrac, riadok, i + j)) {
-                    vyhra++;
-                }
-                
-                if (vyhra == this.pocetVyhernych) {
-                    return true;
-                }
-                
-            }
-        }
-        return false;
-    }
-    
-    /**
      * @param hrac konkrétny hráč, pre ktorého chceme kontrolovať výhernú diagonálu
      * @param zaciatokRiadku od ktorého riadku chceme kontrolovať
      * @param zaciatokStlpca od ktorého stĺpca chceme kontrolovať
@@ -118,13 +118,12 @@ public class HraciaPlocha {
      * následujúcich za sebou rovná
      */
     public boolean vyhraDiagonala(Hrac hrac, int zaciatokRiadku, int zaciatokStlpca, boolean jeZLava) {
-        if (zaciatokRiadku > this.velkostPlochy || zaciatokStlpca > this.velkostPlochy) {
-            return false;
-        }
         if (zaciatokRiadku < 0 || zaciatokStlpca < 0) {
             return false;
         }
-        
+        if (zaciatokRiadku > this.velkostPlochy || zaciatokStlpca > this.velkostPlochy) {
+            return false;
+        }
         
         int diagonala = this.velkostPlochy;
         if (jeZLava) {
@@ -139,6 +138,7 @@ public class HraciaPlocha {
             int vyhra = 0;
             
             for (int j = 0; j < this.pocetVyhernych; j++) {
+                
                 if (jeZLava) {
                     if (this.vyhraBunka(hrac, zaciatokRiadku + j, zaciatokStlpca + j)) {
                         vyhra++;
@@ -149,6 +149,7 @@ public class HraciaPlocha {
                         vyhra++;
                     }
                 }
+                
                 /*plocha[j] = this.hraciaPlocha[zaciatokRiadku + j][zaciatokStlpca + j];
                 System.out.format("(%d %d)(%d %d) %d%n", i, j, zaciatokRiadku + j, zaciatokStlpca + j, vyhra);*/
             }
@@ -166,8 +167,6 @@ public class HraciaPlocha {
             }
             System.out.println();*/
             //System.out.format("(%d %d) %s %s %s %d%n", zaciatokRiadku, zaciatokStlpca, prvyZnak, druhyZnak, tretiZnak, i);
-            
-            
 
             if (vyhra == this.pocetVyhernych) {
                 return true;
@@ -192,10 +191,9 @@ public class HraciaPlocha {
     }
     
     /**
+     * @TODO - enum pre stlpec, riadok, diagonalu zlava/sprava a spojiť výhry dokopy dokopy s parametrom, ktorý bude ten enum
      * @TODO - pre vyhry robiť kontroly na riadky a stlpce, aby sa nedalo
      * zadať zlé číslo (napr. viac ako pocet stlpcov a tak)
-     * @TODO - urobiť výhry na viac výherných, podľa toho, koľko si zadá používateľ
-     * @TODO - spojiť výhry dokopy do jednej metódy
      */
     
     /**
