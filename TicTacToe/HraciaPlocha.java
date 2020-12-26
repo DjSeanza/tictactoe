@@ -11,33 +11,44 @@ public class HraciaPlocha {
      * tak sa vytvorí hracia plocha 3x3.
      * 
      * @param velkost je to veľkosť hracej plochy, plocha je vždy štvorcová
+     * @param pocetVyhernych určuje na koľko výherných políčok sa bude hrať
      */
     public HraciaPlocha(int velkost, int pocetVyhernych) {
-        this.velkostPlochy = velkost;
+        // kvôli riadku a stĺpcu s číslami musíme pričítať ešte jeden riadok a stĺpec
+        this.velkostPlochy = velkost + 1;
         this.pocetVyhernych = pocetVyhernych;
         this.zadaneSpravne = true;
         
         for (int i = 0; i < velkost; i++) {
             for (int j = 0; j < velkost; j++) {
                 if (velkost > 2 && velkost < 13) {
-                    this.hraciaPlocha = new char[velkost][velkost];
+                    this.hraciaPlocha = new char[this.velkostPlochy][this.velkostPlochy];
                 } else {
-                    this.hraciaPlocha = new char[3][3];
-                    this.velkostPlochy = 3;
+                    this.hraciaPlocha = new char[4][4];
+                    this.velkostPlochy = 4;
                 }
             }
         }
     }
     
-    public boolean polickoZadaneSpravne() {
+    public boolean jePolickoZadaneSpravne() {
         return this.zadaneSpravne;
     }
     
+    /**
+     * Vráti nám veľkosť plochy (t.j. šírku riadku/stĺpca)
+     */
     public int getVelkostPlochy() {
         return this.velkostPlochy;
     }
     
+    public boolean vyhraBunka(Hrac hrac, int riadok, int stlpec) {
+        return this.hraciaPlocha[riadok][stlpec] == hrac.getZnak();
+    }
+    
     /**
+     * Kontroluje, či je daný stĺpec výherný.
+     * 
      * @param hrac konkrétny hráč, pre ktorého chceme kontrolovať výherný stĺpec
      * @param stlpec konkrétny stĺpec, ktorý chceme skontrolovať
      * @return boolean vracia hodnotu true, ak sa daný počet znakov 
@@ -45,18 +56,35 @@ public class HraciaPlocha {
      */
     public boolean vyhraStlpec(Hrac hrac, int stlpec) {
         for (int i = 0; i < this.velkostPlochy - (this.pocetVyhernych - 1); i++) {
-            char prvyZnak = this.hraciaPlocha[i][stlpec];
-            char druhyZnak = this.hraciaPlocha[i + 1][stlpec];
-            char tretiZnak = this.hraciaPlocha[i + 2][stlpec];
-            //System.out.format("%s %s %s %d%n", prvyZnak, druhyZnak, tretiZnak, i);
-            if (prvyZnak == hrac.getZnak() && prvyZnak == druhyZnak && prvyZnak == tretiZnak) {
-                return true;
+            //char[] plocha = new char[this.pocetVyhernych];
+            int vyhra = 0;
+            
+            for (int j = 0; j < this.pocetVyhernych; j++) {
+                
+                if (this.vyhraBunka(hrac, i + j, stlpec)) {
+                    vyhra++;
+                }
+                
+                /*plocha[j] = this.hraciaPlocha[i + j][stlpec];
+                System.out.format("(%d %d) %d%n", i, j, vyhra);*/
+                
+                if (vyhra == this.pocetVyhernych) {
+                    return true;
+                }
+                
             }
+            
+            /*for (int h = 0; h < plocha.length; h++) {
+                System.out.print("[" + plocha[h] + "]");
+            }
+            System.out.println();*/
         }
         return false;
     }
     
     /**
+     * Kontroluje, či je daný riadok výherný. 
+     * 
      * @param hrac konkrétny hráč, pre ktorého chceme kontrolovať výherný riadok
      * @param riadok konkrétny riadok, ktorý chceme skontrolovať
      * @return boolean vracia hodnotu true, ak sa daný počet znakov 
@@ -64,12 +92,18 @@ public class HraciaPlocha {
      */
     public boolean vyhraRiadok(Hrac hrac, int riadok) {        
         for (int i = 0; i < this.velkostPlochy - (this.pocetVyhernych - 1); i++) {
-            char prvyZnak = this.hraciaPlocha[riadok][i];
-            char druhyZnak = this.hraciaPlocha[riadok][i + 1];
-            char tretiZnak = this.hraciaPlocha[riadok][i + 2];
-            //System.out.format("%s %s %s %d%n", prvyZnak, druhyZnak, tretiZnak, i);
-            if (prvyZnak == hrac.getZnak() && prvyZnak == druhyZnak && prvyZnak == tretiZnak) {
-                return true;
+            int vyhra = 0;
+            
+            for (int j = 0; j < this.pocetVyhernych; j++) {
+                
+                if (this.vyhraBunka(hrac, riadok, i + j)) {
+                    vyhra++;
+                }
+                
+                if (vyhra == this.pocetVyhernych) {
+                    return true;
+                }
+                
             }
         }
         return false;
@@ -100,25 +134,42 @@ public class HraciaPlocha {
             diagonala = (Math.abs(zaciatokRiadku - zaciatokStlpca) + 1);
         }
         
+        //char[] plocha = new char[this.pocetVyhernych];
         for (int i = 0; i < diagonala - (this.pocetVyhernych - 1); i++) {
-            char prvyZnak = this.hraciaPlocha[zaciatokRiadku][zaciatokStlpca];
-            char druhyZnak = '.';
-            char tretiZnak = '.';
+            int vyhra = 0;
+            
+            for (int j = 0; j < this.pocetVyhernych; j++) {
+                if (jeZLava) {
+                    if (this.vyhraBunka(hrac, zaciatokRiadku + j, zaciatokStlpca + j)) {
+                        vyhra++;
+                    }
+                }
+                if (!jeZLava) {
+                    if (this.vyhraBunka(hrac, zaciatokRiadku + j, zaciatokStlpca - j)) {
+                        vyhra++;
+                    }
+                }
+                /*plocha[j] = this.hraciaPlocha[zaciatokRiadku + j][zaciatokStlpca + j];
+                System.out.format("(%d %d)(%d %d) %d%n", i, j, zaciatokRiadku + j, zaciatokStlpca + j, vyhra);*/
+            }
+            
             if (jeZLava) {
-                druhyZnak = this.hraciaPlocha[zaciatokRiadku + 1][zaciatokStlpca + 1];
-                tretiZnak = this.hraciaPlocha[zaciatokRiadku + 2][zaciatokStlpca + 2];
                 zaciatokStlpca++;
             }
             if (!jeZLava) {
-                druhyZnak = this.hraciaPlocha[zaciatokRiadku + 1][zaciatokStlpca - 1];
-                tretiZnak = this.hraciaPlocha[zaciatokRiadku + 2][zaciatokStlpca - 2];
                 zaciatokStlpca--;
             }
+            zaciatokRiadku++;
+            
+            /*for (int h = 0; h < plocha.length; h++) {
+                System.out.print("[" + plocha[h] + "]");
+            }
+            System.out.println();*/
             //System.out.format("(%d %d) %s %s %s %d%n", zaciatokRiadku, zaciatokStlpca, prvyZnak, druhyZnak, tretiZnak, i);
             
-            zaciatokRiadku++;
+            
 
-            if (prvyZnak == hrac.getZnak() && prvyZnak == druhyZnak && prvyZnak == tretiZnak) {
+            if (vyhra == this.pocetVyhernych) {
                 return true;
             }
         }
@@ -158,13 +209,13 @@ public class HraciaPlocha {
      * zabranie si políčka (napríklad hodenie mincou alebo kameň, papier, nožnice)
      */
     public void setPolicko(int riadok, int stlpec, Hrac hrac) {
-        if (riadok > this.velkostPlochy || stlpec > this.velkostPlochy) {
+        if (riadok > this.velkostPlochy - 1 || stlpec > this.velkostPlochy - 1) {
             System.out.println("Zle zadaný riadok alebo stĺpec");
             return;
         }
         
-        if (this.hraciaPlocha[riadok - 1][stlpec - 1] == '.') {
-            this.hraciaPlocha[riadok - 1][stlpec - 1] = hrac.getZnak();
+        if (this.hraciaPlocha[riadok][stlpec] == '.') {
+            this.hraciaPlocha[riadok][stlpec] = hrac.getZnak();
             this.zadaneSpravne = true;
         } else {
             System.out.println("Tu už sa niečo nachádza");
@@ -174,15 +225,15 @@ public class HraciaPlocha {
     
     /**
      * Vykreslíme hraciu plochu pomocou bodiek
-     * 
-     * @TODO - v hracej ploche nech sú indexy riadkov a stĺpcov na lepšiu orientáciu
      */
     public void setPolicka() {
         for (int riadok = 0; riadok < this.velkostPlochy; riadok++) {
             for (int stlpec = 0; stlpec < this.velkostPlochy; stlpec++) {
                 this.hraciaPlocha[riadok][stlpec] = '.';
-                /*this.hraciaPlocha[0][stlpec] = '1';
-                this.hraciaPlocha[riadok][0] = '1';*/
+                // riešenie (char)stlpec nefungovalo, kvôli ASCII kódom
+                // dané riešenie som našiel sem https://www.javatpoint.com/java-int-to-char
+                this.hraciaPlocha[0][stlpec] = (char)(stlpec + '0');
+                this.hraciaPlocha[riadok][0] = (char)(riadok + '0');
             }
         }
     }
