@@ -2,7 +2,7 @@
 public class HraciaPlocha {
     private char[][] hraciaPlocha;
     private int velkostPlochy;
-    private int pocetVyhernych;
+    private int pocetPolicokZaSebou;
     private boolean zadaneSpravne;
     
     /**
@@ -11,9 +11,9 @@ public class HraciaPlocha {
      * tak sa vytvorí hracia plocha 3x3.
      * 
      * @param velkost je to veľkosť hracej plochy, plocha je vždy štvorcová
-     * @param pocetVyhernych určuje na koľko výherných políčok sa bude hrať
+     * @param pocetPolicokZaSebou určuje na koľko výherných políčok sa bude hrať
      */
-    public HraciaPlocha(int velkost, int pocetVyhernych) {
+    public HraciaPlocha(int velkost, int pocetPolicokZaSebou) {
         if (velkost > 3 && velkost < 14) {
             // kvôli riadku a stĺpcu s číslami musíme pričítať ešte jeden riadok a stĺpec
             this.velkostPlochy = velkost + 1;
@@ -21,10 +21,10 @@ public class HraciaPlocha {
             this.velkostPlochy = 4;
         }
         
-        if (pocetVyhernych > 0 && pocetVyhernych <= velkost) {
-            this.pocetVyhernych = pocetVyhernych;
+        if (pocetPolicokZaSebou > 0 && pocetPolicokZaSebou <= velkost) {
+            this.pocetPolicokZaSebou = pocetPolicokZaSebou;
         } else {
-            this.pocetVyhernych = 3;
+            this.pocetPolicokZaSebou = 3;
         }
         
         this.zadaneSpravne = true;
@@ -74,12 +74,12 @@ public class HraciaPlocha {
             return false;
         }
         
-        //char[] plocha = new char[this.pocetVyhernych];
+        //char[] plocha = new char[this.pocetPolicokZaSebou];
         
-        for (int i = 0; i < this.velkostPlochy - (this.pocetVyhernych - 1); i++) {
+        for (int i = 0; i < this.velkostPlochy - (this.pocetPolicokZaSebou - 1); i++) {
             int vyhra = 0;
             
-            for (int j = 0; j < this.pocetVyhernych; j++) {
+            for (int j = 0; j < this.pocetPolicokZaSebou; j++) {
                 
                 if (jeRiadok) {
                     if (this.vyhraBunka(hrac, riadok, i + j)) {
@@ -92,7 +92,7 @@ public class HraciaPlocha {
                     }
                 }
                 
-                if (vyhra == this.pocetVyhernych) {
+                if (vyhra == this.pocetPolicokZaSebou) {
                     return true;
                 }
                 
@@ -133,11 +133,11 @@ public class HraciaPlocha {
             diagonala = (Math.abs(zaciatokRiadku - zaciatokStlpca) + 1);
         }
         
-        //char[] plocha = new char[this.pocetVyhernych];
-        for (int i = 0; i < diagonala - (this.pocetVyhernych - 1); i++) {
+        //char[] plocha = new char[this.pocetPolicokZaSebou];
+        for (int i = 0; i < diagonala - (this.pocetPolicokZaSebou - 1); i++) {
             int vyhra = 0;
             
-            for (int j = 0; j < this.pocetVyhernych; j++) {
+            for (int j = 0; j < this.pocetPolicokZaSebou; j++) {
                 
                 if (jeZLava) {
                     if (this.vyhraBunka(hrac, zaciatokRiadku + j, zaciatokStlpca + j)) {
@@ -168,7 +168,7 @@ public class HraciaPlocha {
             System.out.println();*/
             //System.out.format("(%d %d) %s %s %s %d%n", zaciatokRiadku, zaciatokStlpca, prvyZnak, druhyZnak, tretiZnak, i);
 
-            if (vyhra == this.pocetVyhernych) {
+            if (vyhra == this.pocetPolicokZaSebou) {
                 return true;
             }
         }

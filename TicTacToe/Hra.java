@@ -22,10 +22,10 @@ public class Hra {
      * @TODO - počet výherných zmeniť na pocetZnakovZaSebou a počet výherných
      * dať na ľubovoľný počet opakovaní tej hry.
      */
-    public Hra(int velkost, int pocetVyhernych, int pocetHracov) { 
+    public Hra(int velkost, int pocetPolicokZaSebou, int pocetHracov) { 
         this.hraci = new ArrayList<Hrac>();
         
-        this.hraciaPlocha = new HraciaPlocha(velkost, pocetVyhernych);
+        this.hraciaPlocha = new HraciaPlocha(velkost, pocetPolicokZaSebou);
         this.hraciaPlocha.setPolicka();
         this.hraciaPlocha.vypisPlochu();        
         
@@ -173,10 +173,35 @@ public class Hra {
         //System.out.println(this.vyhra);
     }
     
+    /**
+     * Metóda nastaví koniec hry na true a výhercu na null.
+     */
     public void remiza() {
         if (this.hraciaPlocha.jeZaplnena()) {
             this.koniecHry = true;
             this.vyherca = null;
+        }
+    }
+    
+    /**
+     * Vypíše kto vyhrál a taktiež body všetkých hráčov.
+     */
+    public void vypisVyhry() {
+        if (this.vyherca == null) {
+            System.out.format("Je to remíza.%n");
+            System.out.println("------------------------------------");
+            for (int i = 0; i < this.pocetHracov; i++) {
+                System.out.format("Hráč so znakom %s: %d%n", this.hraci.get(i).getZnak(), this.hraci.get(i).getPocetVyhier());
+            }
+            System.out.println("------------------------------------");
+        } else {
+            this.vyherca.pridajVyhru();
+            System.out.println("------------------------------------");
+            System.out.format("Vyhral hráč so znakom %s.%n", this.vyherca.getZnak());
+            for (int i = 0; i < this.pocetHracov; i++) {
+                System.out.format("Hráč so znakom %s: %d%n", this.hraci.get(i).getZnak(), this.hraci.get(i).getPocetVyhier());
+            }
+            System.out.println("------------------------------------");
         }
     }
     
@@ -205,11 +230,6 @@ public class Hra {
             }
         }
         
-        if (this.vyherca == null) {
-            System.out.format("Je to remíza.");
-        } else {
-            System.out.format("Vyhral hráč so znakom %s.", this.vyherca.getZnak());
-        }
-        
+        this.vypisVyhry();
     }
 }
