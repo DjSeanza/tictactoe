@@ -31,4 +31,11 @@ public class Hrac {
     public void pridajVyhru() {
         this.pocetVyhier++;
     }
+    
+    /**
+     * Vyresetuje výhry hráčovi.
+     */
+    public void resetujVyhry() {
+        this.pocetVyhier = 0;
+    }
 }

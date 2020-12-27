@@ -3,10 +3,13 @@ import java.util.Scanner;
 
 public class Hra {
     private ArrayList<Hrac> hraci;
+    private ArrayList<Hrac> vyherci;
     private HraciaPlocha hraciaPlocha;
     private int pocetHracov;
+    private int pocetVyhernych;
+    private int pocetPolicokZaSebou;
     private boolean koniecHry;
-    private Hrac vyherca;
+    private Hrac vyhercaKola;
     
     private Scanner input = new Scanner(System.in);
     
@@ -17,34 +20,49 @@ public class Hra {
      * prvý znak, ktorý zadajú).
      * 
      * @param velkost je to veľkosť hracej plochy, plocha je vždy štvorcová
+     * @param pocetPolicokZaSebou počet políčok, ktoré musia obsahovať znak hráča
+     * a následovať hneď za sebou pre výhru
      * @param pocetHracov počet hráčov
-     * 
-     * @TODO - počet výherných zmeniť na pocetZnakovZaSebou a počet výherných
-     * dať na ľubovoľný počet opakovaní tej hry.
+     * @param pocetVyhernych určuje na koľko výherných bodov sa hrá
      */
-    public Hra(int velkost, int pocetPolicokZaSebou, int pocetHracov) { 
+    public Hra(int velkost, int pocetPolicokZaSebou, int pocetHracov, int pocetVyhernych) { 
+        if (pocetHracov < 2 || pocetHracov > velkost - 1) {
+            this.pocetHracov = 2;
+        } else {
+            this.pocetHracov = pocetHracov;
+        }
+        
+        if (pocetVyhernych < 0) {
+            this.pocetVyhernych = 3;
+        } else {
+            this.pocetVyhernych = pocetVyhernych;
+        }
+        
+        this.pocetPolicokZaSebou = pocetPolicokZaSebou;
+        
         this.hraci = new ArrayList<Hrac>();
+        this.vyherci = new ArrayList<Hrac>();
         
         this.hraciaPlocha = new HraciaPlocha(velkost, pocetPolicokZaSebou);
-        this.hraciaPlocha.setPolicka();
-        this.hraciaPlocha.vypisPlochu();        
+        this.hraciaPlocha.setPolicka();        
         
-        for (int i = 0; i < pocetHracov; i++) {
-            boolean jePridany = this.pridajHraca();
+        for (int i = 0; i < this.pocetHracov; i++) {
+            boolean jePridany = this.pridajHraca(true);
             while (!jePridany) {
-                jePridany = this.pridajHraca();
+                jePridany = this.pridajHraca(true);
             }
         }
         
-        this.pocetHracov = pocetHracov;
+        this.menuHry();
     }
     
     /**
      * Metóda pridáva hráčov do hry.
      * 
+     * @param jeVKonstruktore určuje, či sa pridávanie hráčov nachádza v konštruktore
      * @return boolean vráti hodnotu true ak sa hráč úspešne pridal
      */
-    public boolean pridajHraca() {
+    public boolean pridajHraca(boolean jeVKonstruktore) {
         /* this.hraciaPlocha.getVelkostPlochy() - 2
          * pretože do veľkosti plochy sa rátajú aj stĺpce a riadky s číslami
          * a hráčov má byť aspoň o jedného menej ako je veľkosť plochy.
@@ -66,7 +84,9 @@ public class Hra {
         }
         
         if (!jeZnakRovnaky) {
-            this.pocetHracov++;
+            if (!jeVKonstruktore) {
+                this.pocetHracov++;
+            }
             return this.hraci.add(new Hrac(znak));
         }
         
@@ -110,7 +130,6 @@ public class Hra {
      * @param hrac konkrétny hráč, pre ktorého chceme nastaviť 
      * políčko na hodnotu znaku, ktorý si zadal
      * 
-     * @TODO - kontrola, či zadali správne hodnoty pre riadok a stĺpec
      */
     public void setPolickoPreHraca(int hrac) {
         System.out.println("Kolo hráča: " + (hrac + 1));
@@ -129,34 +148,33 @@ public class Hra {
     /**
      * Po každom kole kontroluje riadky a stĺpce, či nevyhral niektorí z hráčov.
      * 
-     * @TODO - urobiť remízu
      * @TODO - fujky metóda, treba ju upraviť
      */
-    public void vyhra() {
+    public void vyhraKola() {
         for (Hrac aktualny: this.hraci) {
             for (int i = 0; i < this.hraciaPlocha.getVelkostPlochy(); i++) {
                 if (!this.koniecHry) {
                     // true značí, že ide o kontrolu riadku
                     this.koniecHry = this.hraciaPlocha.vyhraRiadokStlpec(aktualny, i, i, true);
-                    this.vyherca = aktualny;
+                    this.vyhercaKola = aktualny;
                 }
                 if (!this.koniecHry) {
                     // false značí, že ide o kontrolu stĺpca
                     this.koniecHry = this.hraciaPlocha.vyhraRiadokStlpec(aktualny, i, i, false);
-                    this.vyherca = aktualny;
+                    this.vyhercaKola = aktualny;
                 }
                 if (!this.koniecHry) {
                     //System.out.format("%d%n", i);
                     this.koniecHry = this.hraciaPlocha.vyhraDiagonala(aktualny, 0, i, true);
-                    this.vyherca = aktualny;
+                    this.vyhercaKola = aktualny;
                 }
                 if (!this.koniecHry) {
                     this.koniecHry = this.hraciaPlocha.vyhraDiagonala(aktualny, i, 0, true);
-                    this.vyherca = aktualny;
+                    this.vyhercaKola = aktualny;
                 }
                 if (!this.koniecHry) {
                     this.koniecHry = this.hraciaPlocha.vyhraDiagonala(aktualny, 0, i, false);
-                    this.vyherca = aktualny;
+                    this.vyhercaKola = aktualny;
                 }
                 if (!this.koniecHry) {
                     //System.out.format("%d%n", i);
@@ -166,11 +184,33 @@ public class Hra {
                      * je to kvôli tomu, aby sa kontrolovalo stále od posledného stĺpca
                      */
                     this.koniecHry = this.hraciaPlocha.vyhraDiagonala(aktualny, i, this.hraciaPlocha.getVelkostPlochy() - 1, false);
-                    this.vyherca = aktualny;
+                    this.vyhercaKola = aktualny;
                 }
             }
         }
         //System.out.println(this.vyhra);
+    }
+    
+    /**
+     * Metóda určuje, či niekto vyhral a ak áno tak kto konkrétne vyhral.
+     * 
+     * @TODO - aby sa výhra dala hneď keď sa splní počet výherných a nespúšťalo sa nové kolo
+     */
+    public void vyhra() {
+        for (int j = 0; j < this.vyherci.size(); j++) {
+            this.vyherci.remove(0);
+        }
+        
+        for (Hrac aktualny: this.hraci) {
+            if (aktualny.getPocetVyhier() == this.pocetVyhernych) {
+                this.vyherci.add(aktualny);
+                this.vypisVyhry();
+                this.koniecHry = true;
+                this.vyhercaKola = aktualny;
+                this.menuHry();
+            }
+        }
+        
     }
     
     /**
@@ -179,7 +219,7 @@ public class Hra {
     public void remiza() {
         if (this.hraciaPlocha.jeZaplnena()) {
             this.koniecHry = true;
-            this.vyherca = null;
+            this.vyhercaKola = null;
         }
     }
     
@@ -187,21 +227,186 @@ public class Hra {
      * Vypíše kto vyhrál a taktiež body všetkých hráčov.
      */
     public void vypisVyhry() {
-        if (this.vyherca == null) {
+        if (this.vyhercaKola == null && this.vyherci.size() == 0) {
             System.out.format("Je to remíza.%n");
             System.out.println("------------------------------------");
+            
             for (int i = 0; i < this.pocetHracov; i++) {
                 System.out.format("Hráč so znakom %s: %d%n", this.hraci.get(i).getZnak(), this.hraci.get(i).getPocetVyhier());
             }
+            
             System.out.println("------------------------------------");
         } else {
-            this.vyherca.pridajVyhru();
-            System.out.println("------------------------------------");
-            System.out.format("Vyhral hráč so znakom %s.%n", this.vyherca.getZnak());
+            
+            if (this.vyhercaKola != null) {
+                this.vyhercaKola.pridajVyhru();
+                System.out.println("------------------------------------");
+                System.out.format("Kolo vyhral hráč so znakom %s.%n", this.vyhercaKola.getZnak());
+            }
+            
             for (int i = 0; i < this.pocetHracov; i++) {
                 System.out.format("Hráč so znakom %s: %d%n", this.hraci.get(i).getZnak(), this.hraci.get(i).getPocetVyhier());
             }
+            
             System.out.println("------------------------------------");
+        }
+            
+        if (this.vyherci.size() != 0) {
+            System.out.print("Hru vyhral hráč/hráči so znakom/znakmi: ");
+            for (int i = 0; i < this.vyherci.size(); i++) {
+                System.out.format("%s", this.vyherci.get(i).getZnak());
+                if (this.vyherci.size() > 1) {
+                    System.out.print(", ");
+                }
+            }
+            System.out.println();
+            System.out.println("------------------------------------");
+        }
+    }
+    
+    /**
+     * Metóda ukončí hru a vypíše konečného výhercu podľa počtu vyhratých kôl.
+     */
+    public void ukoncitHru() {
+        this.vyhercaKola = null;
+        for (int i = 0; i < this.vyherci.size(); i++) {
+            this.vyherci.remove(0);
+        }
+        
+        Hrac vyherca = this.hraci.get(0);
+        for (int i = 0; i < this.pocetHracov; i++) {
+            
+            if (vyherca.getPocetVyhier() == this.hraci.get(i).getPocetVyhier()) {
+                this.vyherci.add(this.hraci.get(i));
+            }
+            
+            if (vyherca.getPocetVyhier() < this.hraci.get(i).getPocetVyhier()) {
+                vyherca = this.hraci.get(i);
+                for (int j = 0; j < this.vyherci.size(); j++) {
+                    this.vyherci.remove(0);
+                }
+                this.vyherci.add(vyherca);
+            }
+            
+        }
+    }
+    
+    /**
+     * Vypíše základné menu hry.
+     * (Nová hra, Pokračovať v uloženej hre, Nastavenia, Ukončiť hru)
+     */
+    public void menuHry() {
+        System.out.println("Čo si prajete urobiť?");
+        System.out.println("Nová hra (n)\nPokračovať v uloženej hre (c)\nNastavenia (o)\nUkončiť hru (e)\n");
+        char znak = this.input.next().charAt(0);
+        
+        switch (znak) {
+            case 'n':
+                for (int i = 0; i < this.pocetHracov; i++) {
+                    this.hraci.get(i).resetujVyhry();
+                }
+                this.hra();
+                break;
+            case 'c':
+                /**
+                 * @TODO - načítanie zo súboru
+                 */
+                break;
+            case 'o':
+                this.nastaveniaHry();
+                break;
+            case 'e':
+                System.exit(0);
+                break;
+            default:
+                this.menuHry();
+                break;
+        }
+    }
+    
+    /**
+     * Obsahuje základné nastavenia hry
+     * (Pridať hráča, Odstrániť hráča, Zmeniť počet výherných
+     */
+    public void nastaveniaHry() {
+        System.out.println("Čo si prajete urobiť?");
+        System.out.println("Pridať hráča (a)\nOdstrániť hráča (d)\nZmeniť počet výherných (p)\nZmeniť počet políčok za sebou (s)\nZmeniť veľkosť plochy (v)\nSpäť (b)\n");
+        char znak = this.input.next().charAt(0);
+        
+        switch (znak) {
+            case 'a':
+                this.pridajHraca(false);
+                this.nastaveniaHry();
+                break;
+            case 'd':
+                this.odstranHraca();
+                this.nastaveniaHry();
+                break;
+            case 'p':
+                boolean jeZadaneSpravne = false;
+                do {
+                    System.out.print("Zadajte číslo väčšie ako 0: ");
+                    int novyPocetVyhernych = this.input.nextInt();
+                    if (novyPocetVyhernych > 0) {
+                        this.pocetVyhernych = novyPocetVyhernych;
+                        jeZadaneSpravne = true;
+                    }
+                } while (!jeZadaneSpravne);
+                this.nastaveniaHry();
+                break;
+            case 's':
+                System.out.print("Zadajte číslo od 3 po veľkosť hracej plochy: ");
+                int novyPocetPolicokZaSebou = this.input.nextInt();
+                this.pocetPolicokZaSebou = novyPocetPolicokZaSebou;
+                this.hraciaPlocha = new HraciaPlocha(this.hraciaPlocha.getVelkostPlochy() - 1, this.pocetPolicokZaSebou);
+                this.hraciaPlocha.setPolicka();
+                this.nastaveniaHry();
+                break;
+            case 'v':
+                System.out.print("Zadajte číslo od 3 do 13: ");
+                int velkostPlochy = this.input.nextInt();
+                this.hraciaPlocha = new HraciaPlocha(velkostPlochy, this.pocetPolicokZaSebou);
+                this.hraciaPlocha.setPolicka();
+                this.nastaveniaHry();
+                break;
+            case 'b':
+                this.menuHry();
+                break;
+            default:
+                this.nastaveniaHry();
+                break;
+        }
+    }
+    
+    /**
+     * Po každom kole vypíše možnosti, z ktorých si používateľ vyberie jednu.
+     * (Pokračovať, Pridať hráča, Odstrániť hráča, Uložiť, Ukončiť)
+     */
+    public void moznostiHry() {
+        System.out.println("Čo si prajete urobiť?");
+        System.out.println("Pokračovať (c)\nUložiť (s)\nVrátiť sa do menu (m)\nUkončiť (e)\n");
+        char znak = this.input.next().charAt(0);
+        
+        switch (znak) {
+            case 'c':
+                this.hra();
+                break;
+            case 's':
+                /**
+                 * @TODO uložiť do súboru
+                 */
+                break;
+            case 'm':
+                this.menuHry();
+                break;
+            case 'e':
+                this.ukoncitHru();
+                this.vypisVyhry();
+                System.exit(0);
+                break;
+            default:
+                System.out.println("Niečo ste zadali zle.");
+                this.moznostiHry();
         }
     }
     
@@ -215,21 +420,29 @@ public class Hra {
      * vypísať výhercu a ukončiť hru
      */
     public void hra() {
-        this.koniecHry = false;
         this.hraciaPlocha.setPolicka();
-        this.vyherca = null;
+        this.hraciaPlocha.vypisPlochu();
+        this.koniecHry = false;
+        this.vyhercaKola = null;
+        
+        // vymazanie výhercov
+        for (int i = 0; i < this.vyherci.size(); i++) {
+            this.vyherci.remove(0);
+        }
         
         while (!this.koniecHry) {
             for (int i = 0; i < this.pocetHracov; i++) {
+                this.vyhra();
                 
                 if (!this.koniecHry) {
                     this.setPolickoPreHraca(i);
                 }
-                this.vyhra();
+                this.vyhraKola();
                 this.remiza();
             }
         }
         
         this.vypisVyhry();
+        this.moznostiHry();
     }
 }

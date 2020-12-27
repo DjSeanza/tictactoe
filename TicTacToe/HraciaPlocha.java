@@ -21,7 +21,7 @@ public class HraciaPlocha {
             this.velkostPlochy = 4;
         }
         
-        if (pocetPolicokZaSebou > 0 && pocetPolicokZaSebou <= velkost) {
+        if (pocetPolicokZaSebou > 2 && pocetPolicokZaSebou <= velkost) {
             this.pocetPolicokZaSebou = pocetPolicokZaSebou;
         } else {
             this.pocetPolicokZaSebou = 3;
@@ -36,12 +36,17 @@ public class HraciaPlocha {
         }
     }
     
+    /**
+     * @return boolean vráti hodnotu true ak je políčko zadané správne
+     */
     public boolean jePolickoZadaneSpravne() {
         return this.zadaneSpravne;
     }
     
     /**
      * Vráti nám veľkosť plochy (t.j. šírku riadku/stĺpca)
+     * 
+     * @return int vráti veľkosť plochy
      */
     public int getVelkostPlochy() {
         return this.velkostPlochy;
@@ -209,6 +214,7 @@ public class HraciaPlocha {
     public void setPolicko(int riadok, int stlpec, Hrac hrac) {
         if (riadok > this.velkostPlochy - 1 || stlpec > this.velkostPlochy - 1) {
             System.out.println("Zle zadaný riadok alebo stĺpec");
+            this.zadaneSpravne = false;
             return;
         }
         
