@@ -1,4 +1,9 @@
-
+/**
+ * Táto trieda je trieda, ktorá obsahuje základné informácie o danom hráčovi.  
+ * 
+ * @author Patrik Ištvanko
+ * @version 1.0.0
+ */
 public class Hrac {
     private char znak;
     private int pocetVyhier;

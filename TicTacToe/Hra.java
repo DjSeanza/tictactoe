@@ -1,6 +1,13 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * Táto trieda slúži na základnú prácu s hrou. Vytvára inštanciu hry, určuje výhry, 
+ * pričítava body hráčom a obsahuje základné nastavenia hry.
+ * 
+ * @author Patrik Ištvanko
+ * @version 1.0.0
+ */
 public class Hra {
     private ArrayList<Hrac> hraci;
     private ArrayList<Hrac> vyherci;
@@ -10,8 +17,6 @@ public class Hra {
     private int pocetPolicokZaSebou;
     private boolean koniecHry;
     private Hrac vyhercaKola;
-    
-    private static Hra hra = null;
     
     private Scanner input = new Scanner(System.in);
     
@@ -29,7 +34,7 @@ public class Hra {
      * 
      * @TODO - pridať private metódy, napríklad na menu a takto
      */
-    private Hra(int velkost, int pocetPolicokZaSebou, int pocetHracov, int pocetVyhernych) { 
+    public Hra(int velkost, int pocetPolicokZaSebou, int pocetHracov, int pocetVyhernych) { 
         if (pocetHracov < 2 || pocetHracov > velkost - 1) {
             this.pocetHracov = 2;
         } else {
@@ -56,8 +61,6 @@ public class Hra {
                 jePridany = this.pridajHraca(true);
             }
         }
-        
-        //this.menuHry();
     }
     
     /**
@@ -73,23 +76,6 @@ public class Hra {
             input.next();
         }
         return input.nextInt();
-    }
-    
-    /**
-     * Vytvorí nám inštanciu hry a zabezpečí aby bola otvorená len jedna hra v danom čase.
-     * 
-     * @param velkost je to veľkosť hracej plochy, plocha je vždy štvorcová
-     * @param pocetPolicokZaSebou počet políčok, ktoré musia obsahovať znak hráča
-     * a následovať hneď za sebou pre výhru
-     * @param pocetHracov počet hráčov
-     * @param pocetVyhernych určuje na koľko výherných bodov sa hrá
-     * @return Hra vráti nám inštanciu hry
-     */
-    public static Hra vytvorHru(int velkost, int pocetPolicokZaSebou, int pocetHracov, int pocetVyhernych) {
-        if (Hra.hra == null) {
-            return Hra.hra = new Hra(velkost, pocetPolicokZaSebou, pocetHracov, pocetVyhernych);
-        } 
-        return Hra.hra;
     }
     
     /**
@@ -109,7 +95,7 @@ public class Hra {
             return false;
         }
         
-        System.out.println("Znak hráča: " + (this.hraci.size() + 1));
+        System.out.print("Znak hráča " + (this.hraci.size() + 1) + ": ");
         char znak = this.input.next().charAt(0);
         boolean jeZnakRovnaky = false;
         

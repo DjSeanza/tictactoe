@@ -1,4 +1,9 @@
-
+/**
+ * Táto trieda slúži na základnú prácu s hracou plochou, t.j. výpis plochy, nastavovanie hodnoty daným políčkam a pod. 
+ * 
+ * @author Patrik Ištvanko
+ * @version 1.0.0
+ */
 public class HraciaPlocha {
     private char[][] hraciaPlocha;
     private int velkostPlochy;
@@ -65,7 +70,8 @@ public class HraciaPlocha {
     }
     
     /**
-     * Kontroluje či je daný riadok alebo stĺpec výherný.
+     * Kontroluje či je daný riadok alebo stĺpec výherný. Ak je riadok alebo stĺpec výherný 
+     * (t.j. ak následuje za sebou určitý počet znakov, ktoré zadal používateľ), tak vráti hodnotu true.
      * 
      * @param hrac hráč, pre ktorého chceme kontrolovať riadok a stĺpec
      * @param riadok konkrétny riadok, ktorý chceme skontrolovať
@@ -113,7 +119,8 @@ public class HraciaPlocha {
     }
     
     /**
-     * Kontroluje diagonálu, či je výherná.
+     * Kontroluje diagonálu, či je výherná. Ak výherná je (t.j. ak následuje za sebou určitý 
+     * počet znakov, ktoré zadal používateľ), tak vráti hodnotu true.
      * 
      * @param hrac konkrétny hráč, pre ktorého chceme kontrolovať výhernú diagonálu
      * @param zaciatokRiadku od ktorého riadku chceme kontrolovať
@@ -138,7 +145,6 @@ public class HraciaPlocha {
             diagonala = (Math.abs(zaciatokRiadku - zaciatokStlpca) + 1);
         }
         
-        //char[] plocha = new char[this.pocetPolicokZaSebou];
         for (int i = 0; i < diagonala - (this.pocetPolicokZaSebou - 1); i++) {
             int vyhra = 0;
             
@@ -155,8 +161,6 @@ public class HraciaPlocha {
                     }
                 }
                 
-                /*plocha[j] = this.hraciaPlocha[zaciatokRiadku + j][zaciatokStlpca + j];
-                System.out.format("(%d %d)(%d %d) %d%n", i, j, zaciatokRiadku + j, zaciatokStlpca + j, vyhra);*/
             }
             
             if (jeZLava) {
@@ -166,12 +170,6 @@ public class HraciaPlocha {
                 zaciatokStlpca--;
             }
             zaciatokRiadku++;
-            
-            /*for (int h = 0; h < plocha.length; h++) {
-                System.out.print("[" + plocha[h] + "]");
-            }
-            System.out.println();*/
-            //System.out.format("(%d %d) %s %s %s %d%n", zaciatokRiadku, zaciatokStlpca, prvyZnak, druhyZnak, tretiZnak, i);
 
             if (vyhra == this.pocetPolicokZaSebou) {
                 return true;
@@ -194,12 +192,6 @@ public class HraciaPlocha {
         }
         return true;
     }
-    
-    /**
-     * @TODO - enum pre stlpec, riadok, diagonalu zlava/sprava a spojiť výhry dokopy dokopy s parametrom, ktorý bude ten enum
-     * @TODO - pre vyhry robiť kontroly na riadky a stlpce, aby sa nedalo
-     * zadať zlé číslo (napr. viac ako pocet stlpcov a tak)
-     */
     
     /**
      * Nastavíme políčko pre daného hráča na konkrétnu pozíciu
@@ -228,14 +220,16 @@ public class HraciaPlocha {
     }
     
     /**
-     * Vykreslíme hraciu plochu pomocou bodiek
+     * Dáme do každej bunky bodku a následne do prvého riadku a stĺpca vpíšeme ešte pomocné čísla riadkov a stĺpcov.
      */
     public void setPolicka() {
         for (int riadok = 0; riadok < this.velkostPlochy; riadok++) {
             for (int stlpec = 0; stlpec < this.velkostPlochy; stlpec++) {
                 this.hraciaPlocha[riadok][stlpec] = '.';
-                // riešenie (char)stlpec nefungovalo, kvôli ASCII kódom
-                // dané riešenie som našiel sem https://www.javatpoint.com/java-int-to-char
+                /*
+                 * riešenie (char)stlpec nefungovalo, kvôli ASCII kódom 
+                 * dané riešenie som našiel sem https://www.javatpoint.com/java-int-to-char
+                 */ 
                 this.hraciaPlocha[0][stlpec] = (char)(stlpec + '0');
                 this.hraciaPlocha[riadok][0] = (char)(riadok + '0');
             }
