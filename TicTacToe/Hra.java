@@ -11,6 +11,8 @@ public class Hra {
     private boolean koniecHry;
     private Hrac vyhercaKola;
     
+    private static Hra hra = null;
+    
     private Scanner input = new Scanner(System.in);
     
     /**
@@ -27,7 +29,7 @@ public class Hra {
      * 
      * @TODO - pridať private metódy, napríklad na menu a takto
      */
-    public Hra(int velkost, int pocetPolicokZaSebou, int pocetHracov, int pocetVyhernych) { 
+    private Hra(int velkost, int pocetPolicokZaSebou, int pocetHracov, int pocetVyhernych) { 
         if (pocetHracov < 2 || pocetHracov > velkost - 1) {
             this.pocetHracov = 2;
         } else {
@@ -55,7 +57,7 @@ public class Hra {
             }
         }
         
-        this.menuHry();
+        //this.menuHry();
     }
     
     /**
@@ -71,6 +73,23 @@ public class Hra {
             input.next();
         }
         return input.nextInt();
+    }
+    
+    /**
+     * Vytvorí nám inštanciu hry a zabezpečí aby bola otvorená len jedna hra v danom čase.
+     * 
+     * @param velkost je to veľkosť hracej plochy, plocha je vždy štvorcová
+     * @param pocetPolicokZaSebou počet políčok, ktoré musia obsahovať znak hráča
+     * a následovať hneď za sebou pre výhru
+     * @param pocetHracov počet hráčov
+     * @param pocetVyhernych určuje na koľko výherných bodov sa hrá
+     * @return Hra vráti nám inštanciu hry
+     */
+    public static Hra vytvorHru(int velkost, int pocetPolicokZaSebou, int pocetHracov, int pocetVyhernych) {
+        if (Hra.hra == null) {
+            return Hra.hra = new Hra(velkost, pocetPolicokZaSebou, pocetHracov, pocetVyhernych);
+        } 
+        return Hra.hra;
     }
     
     /**
@@ -345,7 +364,7 @@ public class Hra {
                 for (int i = 0; i < this.pocetHracov; i++) {
                     this.hraci.get(i).resetujVyhry();
                 }
-                this.hra();
+                this.zacniHru();
                 break;
             case 'c':
                 /**
@@ -429,7 +448,7 @@ public class Hra {
         
         switch (znak) {
             case 'c':
-                this.hra();
+                this.zacniHru();
                 break;
             case 's':
                 /**
@@ -459,7 +478,7 @@ public class Hra {
      * @TODO - po každej hre sa opýtať, či chceme pokračovať, ak nie, tak
      * vypísať výhercu a ukončiť hru
      */
-    public void hra() {
+    public void zacniHru() {
         this.hraciaPlocha.setPolicka();
         this.hraciaPlocha.vypisPlochu();
         this.koniecHry = false;
