@@ -1,6 +1,6 @@
-import java.util.ArrayList;
+import java.util.ArrayList; 
 import java.util.Scanner;
-
+ 
 /**
  * Táto trieda slúži na základnú prácu s hrou. Vytvára inštanciu hry, určuje výhry, 
  * pričítava body hráčom a obsahuje základné nastavenia hry.
@@ -156,9 +156,7 @@ public class Hra {
      * políčko na hodnotu znaku, ktorý si zadal
      */
     public void setPolickoPreHraca(int hrac) {
-        int riadok;
-        int stlpec;
-        System.out.println("Kolo hráča: " + (hrac + 1));
+        System.out.println("Kolo hráča " + (hrac + 1) + " (" + this.hraci.get(hrac).getZnak() + ").");
         
         /* 
          * kontroluje či je zadané číslo a či je zadané správne
@@ -166,9 +164,11 @@ public class Hra {
          * takto sa stále bude pýtať na nové číslo a bude ho kontrolovať
          */
         System.out.println("Riadok: ");
-        while ((riadok = Hra.kontrolaCislo(this.input)) < 1 || riadok > this.hraciaPlocha.getVelkostPlochy() - 1) {
+        int riadok = Hra.kontrolaCislo(this.input);
+        while (riadok < 1 || riadok > this.hraciaPlocha.getVelkostPlochy() - 1) {
             System.out.println("Musíte zadať číslo, ktoré bude väčšie ako 0\na zároveň nebude väčšie ako je veľkosť hracej plochy.");
             System.out.println("Riadok: ");
+            riadok = Hra.kontrolaCislo(this.input);
         }
         
         /* 
@@ -177,9 +177,11 @@ public class Hra {
          * takto sa stále bude pýtať na nové číslo a bude ho kontrolovať
          */
         System.out.println("Stĺpec: ");
-        while ((stlpec = Hra.kontrolaCislo(this.input)) < 1 || stlpec > this.hraciaPlocha.getVelkostPlochy() - 1) {
+        int stlpec = Hra.kontrolaCislo(this.input);
+        while (stlpec < 1 || stlpec > this.hraciaPlocha.getVelkostPlochy() - 1) {
             System.out.println("Musíte zadať číslo, ktoré bude väčšie ako 0\na zároveň nebude väčšie ako je veľkosť hracej plochy.");
             System.out.println("Stĺpec: ");
+            stlpec = Hra.kontrolaCislo(this.input);
         }
         
         this.hraciaPlocha.setPolicko(riadok, stlpec, this.hraci.get(hrac));
@@ -238,8 +240,6 @@ public class Hra {
     
     /**
      * Metóda určuje, či niekto vyhral a ak áno tak kto konkrétne vyhral.
-     * 
-     * @TODO - aby sa výhra dala hneď keď sa splní počet výherných a nespúšťalo sa nové kolo
      */
     public void vyhra() {
         for (int j = 0; j < this.vyherci.size(); j++) {
@@ -372,6 +372,8 @@ public class Hra {
     /**
      * Obsahuje základné nastavenia hry
      * (Pridať hráča, Odstrániť hráča, Zmeniť počet výherných
+     * 
+     * @TODO - pridať možnosť toho aby používateľ videl aké sú konkrétne nastavenia
      */
     public void nastaveniaHry() {
         System.out.println("Čo si prajete urobiť?");
@@ -460,9 +462,7 @@ public class Hra {
      * koniecHry nerovná true. Po tom ako hráč vyhrá, vypíše sa kto
      * vyhral a hra sa ukončí.
      * 
-     * @TODO - pripočítanie výhry hráčovi a spustenie ďalšej hry
-     * @TODO - po každej hre sa opýtať, či chceme pokračovať, ak nie, tak
-     * vypísať výhercu a ukončiť hru
+     * @TODO - aby kolá šli náhodne, nie aby vždy začínal prvý hráč. Každé kolo nech sa dá shuffle a nech sa ide podľa toho
      */
     public void zacniHru() {
         this.hraciaPlocha.setPolicka();

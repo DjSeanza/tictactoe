@@ -12,14 +12,14 @@ public class HraciaPlocha {
     
     /**
      * Vytvorí hraciu plochu podľa zadaných parametrov.
-     * Ak je hracia plocha menšia ako 3x3 alebo väčšia ako 12x12,
+     * Ak je hracia plocha menšia ako 3x3 alebo väčšia ako 9x9,
      * tak sa vytvorí hracia plocha 3x3.
      * 
      * @param velkost je to veľkosť hracej plochy, plocha je vždy štvorcová
      * @param pocetPolicokZaSebou určuje na koľko výherných políčok sa bude hrať
      */
     public HraciaPlocha(int velkost, int pocetPolicokZaSebou) {
-        if (velkost > 3 && velkost < 14) {
+        if (velkost > 2 && velkost < 10) {
             // kvôli riadku a stĺpcu s číslami musíme pričítať ešte jeden riadok a stĺpec
             this.velkostPlochy = velkost + 1;
         } else {
