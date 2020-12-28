@@ -24,6 +24,8 @@ public class Hra {
      * a následovať hneď za sebou pre výhru
      * @param pocetHracov počet hráčov
      * @param pocetVyhernych určuje na koľko výherných bodov sa hrá
+     * 
+     * @TODO - pridať private metódy, napríklad na menu a takto
      */
     public Hra(int velkost, int pocetPolicokZaSebou, int pocetHracov, int pocetVyhernych) { 
         if (pocetHracov < 2 || pocetHracov > velkost - 1) {
@@ -57,13 +59,29 @@ public class Hra {
     }
     
     /**
+     * Metóda slúži na kontrolu zadaného inputu. Ak je zadaný input číslo, tak
+     * toto číslo nám vráti
+     * 
+     * @param input berie input, ktorý hráč zadal
+     * @return int je číslo, ktoré berieme z inputu používateľa
+     */
+    private static int kontrolaCislo(Scanner input) {
+        while (!input.hasNextInt()) {
+            System.out.println("Musíte zadať číslo.");
+            input.next();
+        }
+        return input.nextInt();
+    }
+    
+    /**
      * Metóda pridáva hráčov do hry.
      * 
      * @param jeVKonstruktore určuje, či sa pridávanie hráčov nachádza v konštruktore
      * @return boolean vráti hodnotu true ak sa hráč úspešne pridal
      */
     public boolean pridajHraca(boolean jeVKonstruktore) {
-        /* this.hraciaPlocha.getVelkostPlochy() - 2
+        /* 
+         * this.hraciaPlocha.getVelkostPlochy() - 2
          * pretože do veľkosti plochy sa rátajú aj stĺpce a riadky s číslami
          * a hráčov má byť aspoň o jedného menej ako je veľkosť plochy.
         */
@@ -118,28 +136,54 @@ public class Hra {
         }
         
         if (!jeOdstraneny) {
-            System.out.println("Hráča sa nepodarilo odstrániť. Skúste to znovu,");
+            System.out.println("Neznámy znak. Hráča sa nepodarilo odstrániť.");
         }
         return jeOdstraneny;
     }
     
     /**
      * Opýtame sa hráča na riadok a stĺpec, do ktorého chce znak
-     * napísať a následne ho tam napíšeme pomocou metódy setPolicko().
+     * napísať a následne ho tam napíšeme pomocou metódy setPolicko()
+     * v triede HraciaPlocha. Metóda sa opakuje dokým sa nezadá 
+     * korektné číslo riadku a stĺpca.
      * 
      * @param hrac konkrétny hráč, pre ktorého chceme nastaviť 
      * políčko na hodnotu znaku, ktorý si zadal
-     * 
      */
     public void setPolickoPreHraca(int hrac) {
+        int riadok;
+        int stlpec;
         System.out.println("Kolo hráča: " + (hrac + 1));
+        
+        /* 
+         * kontroluje či je zadané číslo a či je zadané správne
+         * riadok musí byť definovaný takto v podmienke, aby sa podmienka nezacyklila
+         * takto sa stále bude pýtať na nové číslo a bude ho kontrolovať
+         */
         System.out.println("Riadok: ");
-        int riadok = this.input.nextInt();
-        System.out.println("Stlpec: ");
-        int stlpec = this.input.nextInt();
+        while ((riadok = Hra.kontrolaCislo(this.input)) < 1 || riadok > this.hraciaPlocha.getVelkostPlochy() - 1) {
+            System.out.println("Musíte zadať číslo, ktoré bude väčšie ako 0\na zároveň nebude väčšie ako je veľkosť hracej plochy.");
+            System.out.println("Riadok: ");
+        }
+        
+        /* 
+         * kontroluje či je zadané číslo a či je zadané správne
+         * stĺpec musí byť definovaný takto v podmienke, aby sa podmienka nezacyklila
+         * takto sa stále bude pýtať na nové číslo a bude ho kontrolovať
+         */
+        System.out.println("Stĺpec: ");
+        while ((stlpec = Hra.kontrolaCislo(this.input)) < 1 || stlpec > this.hraciaPlocha.getVelkostPlochy() - 1) {
+            System.out.println("Musíte zadať číslo, ktoré bude väčšie ako 0\na zároveň nebude väčšie ako je veľkosť hracej plochy.");
+            System.out.println("Stĺpec: ");
+        }
         
         this.hraciaPlocha.setPolicko(riadok, stlpec, this.hraci.get(hrac));
         this.hraciaPlocha.vypisPlochu();
+        
+        /*
+         * ak nebude políčko zadané správne (t.j. ak už sa na danom mieste niečo nachádza
+         * alebo je zle zadaný stĺpec alebo riadok), tak sa vykoná táto metóda znovu.
+         */
         if (!this.hraciaPlocha.jePolickoZadaneSpravne()) {
             this.setPolickoPreHraca(hrac);
         }
@@ -164,7 +208,6 @@ public class Hra {
                     this.vyhercaKola = aktualny;
                 }
                 if (!this.koniecHry) {
-                    //System.out.format("%d%n", i);
                     this.koniecHry = this.hraciaPlocha.vyhraDiagonala(aktualny, 0, i, true);
                     this.vyhercaKola = aktualny;
                 }
@@ -177,8 +220,6 @@ public class Hra {
                     this.vyhercaKola = aktualny;
                 }
                 if (!this.koniecHry) {
-                    //System.out.format("%d%n", i);
-                    
                     /* 
                      * this.hraciaPlocha.getVelkostPlochy() - 1 
                      * je to kvôli tomu, aby sa kontrolovalo stále od posledného stĺpca
@@ -188,7 +229,6 @@ public class Hra {
                 }
             }
         }
-        //System.out.println(this.vyhra);
     }
     
     /**
