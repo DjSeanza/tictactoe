@@ -1,6 +1,6 @@
 #BlueJ class context
 comment0.target=HraMain
-comment0.text=\r\n\ Trieda\ main,\ ktor\u00E1\ sp\u00FA\u0161\u0165a\ hru.\r\n\ \r\n\ @author\ Patrik\ I\u0161tvanko\ \r\n\ @version\ 1.0.0\r\n
+comment0.text=\r\n\ Trieda\ main,\ ktor\u00E1\ sp\u00FA\u0161\u0165a\ hru.\r\n\ \r\n\ @author\ Patrik\ I\u0161tvanko\ \r\n\ @version\ 1.0.0\ \r\n
 comment1.params=args
 comment1.target=void\ main(java.lang.String[])
 comment1.text=\r\n\ Hlavn\u00E1\ met\u00F3da,\ ktor\u00E1\ sp\u00FA\u0161\u0165a\ hru.\r\n

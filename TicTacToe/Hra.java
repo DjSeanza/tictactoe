@@ -6,7 +6,7 @@ import java.util.Scanner;
  * pričítava body hráčom a obsahuje základné nastavenia hry.
  * 
  * @author Patrik Ištvanko
- * @version 1.0.0
+ * @version 1.1.3
  */
 public class Hra {
     private ArrayList<Hrac> hraci;
@@ -33,20 +33,9 @@ public class Hra {
      * @param pocetVyhernych určuje na koľko výherných bodov sa hrá
      * 
      * @TODO - pridať private metódy, napríklad na menu a takto
+     * @TODO - urobiť bota
      */
     public Hra(int velkost, int pocetPolicokZaSebou, int pocetHracov, int pocetVyhernych) { 
-        if (pocetHracov < 2 || pocetHracov > velkost - 1) {
-            this.pocetHracov = 2;
-        } else {
-            this.pocetHracov = pocetHracov;
-        }
-        
-        if (pocetVyhernych < 0) {
-            this.pocetVyhernych = 3;
-        } else {
-            this.pocetVyhernych = pocetVyhernych;
-        }
-        
         this.pocetPolicokZaSebou = pocetPolicokZaSebou;
         
         this.hraci = new ArrayList<Hrac>();

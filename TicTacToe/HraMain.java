@@ -18,7 +18,7 @@ public class HraMain {
         int velkost = HraMain.kontrolaCislo(input);
         while (velkost < 3 || velkost > 9) {
             System.out.println("Musíte zadať číslo väčšie ako 2 a menšie ako 10.");
-            System.out.println("Veľkosť hracej plochy: ");
+            System.out.print("Veľkosť hracej plochy: ");
             velkost = HraMain.kontrolaCislo(input);
         }
         
@@ -26,7 +26,7 @@ public class HraMain {
         int pocetPolicokZaSebou = HraMain.kontrolaCislo(input);
         while (pocetPolicokZaSebou < 3 || pocetPolicokZaSebou > velkost) {
             System.out.println("Musíte zadať číslo, ktoré je väčšie ako 2 a menšie alebo rovné ako veľkosť plochy.");
-            System.out.println("Koľko políčok za sebou musí byť v rade pre výhru: ");
+            System.out.print("Koľko políčok za sebou musí byť v rade pre výhru: ");
             pocetPolicokZaSebou = HraMain.kontrolaCislo(input);
         }
         
@@ -34,15 +34,15 @@ public class HraMain {
         int pocetHracov = HraMain.kontrolaCislo(input);
         while (pocetHracov < 2 || pocetHracov > velkost - 1) {
             System.out.println("Musíte zadať číslo, ktoré je väčšie ako 1 a menšie ako veľkosť plochy zmenšenej o jednu jednotku.");
-            System.out.println("Počet hráčov: ");
+            System.out.print("Počet hráčov: ");
             pocetHracov = HraMain.kontrolaCislo(input);
         }
         
         System.out.print("Na koľko výherných kôl chcete hrať: ");
         int pocetVyhernych = HraMain.kontrolaCislo(input);
-        while (pocetVyhernych < 1 || pocetVyhernych > velkost) {
-            System.out.println("Musíte zadať číslo, ktoré je väčšie ako 0 a menšie alebo rovné ako veľkosť plochy.");
-            System.out.println("Na koľko výherných kôl chcete hrať: ");
+        while (pocetVyhernych < 1) {
+            System.out.println("Musíte zadať číslo, ktoré je väčšie ako 0.");
+            System.out.print("Na koľko výherných kôl chcete hrať: ");
             pocetVyhernych = HraMain.kontrolaCislo(input);
         }
         

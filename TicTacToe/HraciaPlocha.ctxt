@@ -1,9 +1,9 @@
 #BlueJ class context
 comment0.target=HraciaPlocha
-comment0.text=\r\n\ T\u00E1to\ trieda\ sl\u00FA\u017Ei\ na\ z\u00E1kladn\u00FA\ pr\u00E1cu\ s\ hracou\ plochou,\ t.j.\ v\u00FDpis\ plochy,\ nastavovanie\ hodnoty\ dan\u00FDm\ pol\u00ED\u010Dkam\ a\ pod.\ \r\n\ \r\n\ @author\ Patrik\ I\u0161tvanko\r\n\ @version\ 1.0.0\r\n
+comment0.text=\r\n\ T\u00E1to\ trieda\ sl\u00FA\u017Ei\ na\ z\u00E1kladn\u00FA\ pr\u00E1cu\ s\ hracou\ plochou,\ t.j.\ v\u00FDpis\ plochy,\ nastavovanie\ hodnoty\ dan\u00FDm\ pol\u00ED\u010Dkam\ a\ pod.\ \r\n\ \r\n\ @author\ Patrik\ I\u0161tvanko\r\n\ @version\ 1.0.5\r\n
 comment1.params=velkost\ pocetPolicokZaSebou
 comment1.target=HraciaPlocha(int,\ int)
-comment1.text=\r\n\ Vytvor\u00ED\ hraciu\ plochu\ pod\u013Ea\ zadan\u00FDch\ parametrov.\r\n\ Ak\ je\ hracia\ plocha\ men\u0161ia\ ako\ 3x3\ alebo\ v\u00E4\u010D\u0161ia\ ako\ 12x12,\r\n\ tak\ sa\ vytvor\u00ED\ hracia\ plocha\ 3x3.\r\n\ \r\n\ @param\ velkost\ je\ to\ ve\u013Ekos\u0165\ hracej\ plochy,\ plocha\ je\ v\u017Edy\ \u0161tvorcov\u00E1\r\n\ @param\ pocetPolicokZaSebou\ ur\u010Duje\ na\ ko\u013Eko\ v\u00FDhern\u00FDch\ pol\u00ED\u010Dok\ sa\ bude\ hra\u0165\r\n
+comment1.text=\r\n\ Vytvor\u00ED\ hraciu\ plochu\ pod\u013Ea\ zadan\u00FDch\ parametrov.\r\n\ Ak\ je\ hracia\ plocha\ men\u0161ia\ ako\ 3x3\ alebo\ v\u00E4\u010D\u0161ia\ ako\ 9x9,\r\n\ tak\ sa\ vytvor\u00ED\ hracia\ plocha\ 3x3.\r\n\ \r\n\ @param\ velkost\ je\ to\ ve\u013Ekos\u0165\ hracej\ plochy,\ plocha\ je\ v\u017Edy\ \u0161tvorcov\u00E1\r\n\ @param\ pocetPolicokZaSebou\ ur\u010Duje\ na\ ko\u013Eko\ v\u00FDhern\u00FDch\ pol\u00ED\u010Dok\ sa\ bude\ hra\u0165\r\n
 comment10.params=
 comment10.target=void\ vypisPlochu()
 comment10.text=\r\n\ Vyp\u00ED\u0161eme\ hraciu\ plochu\r\n

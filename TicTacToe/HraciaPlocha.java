@@ -2,7 +2,7 @@
  * Táto trieda slúži na základnú prácu s hracou plochou, t.j. výpis plochy, nastavovanie hodnoty daným políčkam a pod. 
  * 
  * @author Patrik Ištvanko
- * @version 1.0.0
+ * @version 1.0.5
  */
 public class HraciaPlocha {
     private char[][] hraciaPlocha;
@@ -19,19 +19,6 @@ public class HraciaPlocha {
      * @param pocetPolicokZaSebou určuje na koľko výherných políčok sa bude hrať
      */
     public HraciaPlocha(int velkost, int pocetPolicokZaSebou) {
-        if (velkost > 2 && velkost < 10) {
-            // kvôli riadku a stĺpcu s číslami musíme pričítať ešte jeden riadok a stĺpec
-            this.velkostPlochy = velkost + 1;
-        } else {
-            this.velkostPlochy = 4;
-        }
-        
-        if (pocetPolicokZaSebou > 2 && pocetPolicokZaSebou <= velkost) {
-            this.pocetPolicokZaSebou = pocetPolicokZaSebou;
-        } else {
-            this.pocetPolicokZaSebou = 3;
-        }
-        
         this.zadaneSpravne = true;
         
         for (int i = 0; i < velkost; i++) {
@@ -96,8 +83,7 @@ public class HraciaPlocha {
                     if (this.vyhraBunka(hrac, riadok, i + j)) {
                         vyhra++;
                     }
-                }
-                if (!jeRiadok) {
+                } else {
                     if (this.vyhraBunka(hrac, i + j, stlpec)) {
                         vyhra++;
                     }
@@ -140,8 +126,7 @@ public class HraciaPlocha {
         int diagonala = this.velkostPlochy;
         if (jeZLava) {
             diagonala -= (Math.abs(zaciatokRiadku - zaciatokStlpca));
-        }
-        if (!jeZLava) {
+        } else {
             diagonala = (Math.abs(zaciatokRiadku - zaciatokStlpca) + 1);
         }
         
@@ -154,8 +139,7 @@ public class HraciaPlocha {
                     if (this.vyhraBunka(hrac, zaciatokRiadku + j, zaciatokStlpca + j)) {
                         vyhra++;
                     }
-                }
-                if (!jeZLava) {
+                } else {
                     if (this.vyhraBunka(hrac, zaciatokRiadku + j, zaciatokStlpca - j)) {
                         vyhra++;
                     }
@@ -165,8 +149,7 @@ public class HraciaPlocha {
             
             if (jeZLava) {
                 zaciatokStlpca++;
-            }
-            if (!jeZLava) {
+            } else {
                 zaciatokStlpca--;
             }
             zaciatokRiadku++;
@@ -226,10 +209,6 @@ public class HraciaPlocha {
         for (int riadok = 0; riadok < this.velkostPlochy; riadok++) {
             for (int stlpec = 0; stlpec < this.velkostPlochy; stlpec++) {
                 this.hraciaPlocha[riadok][stlpec] = '.';
-                /*
-                 * riešenie (char)stlpec nefungovalo, kvôli ASCII kódom 
-                 * dané riešenie som našiel sem https://www.javatpoint.com/java-int-to-char
-                 */ 
                 this.hraciaPlocha[0][stlpec] = (char)(stlpec + '0');
                 this.hraciaPlocha[riadok][0] = (char)(riadok + '0');
             }
