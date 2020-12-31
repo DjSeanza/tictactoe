@@ -1,4 +1,7 @@
 import java.util.ArrayList;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Random; 
 import java.util.Scanner;
 
@@ -232,7 +235,7 @@ public class Hra {
     /**
      * Metóda určuje, či niekto vyhral a ak áno tak kto konkrétne vyhral.
      */
-    private void vyhra() {
+    private void vyhra() throws IOException {
         for (int j = 0; j < this.vyherci.size(); j++) {
             this.vyherci.remove(0);
         }
@@ -306,9 +309,11 @@ public class Hra {
     private void vypisNastavenychHodnot() {
         System.out.format("Počet Hráčov: %s%n", this.pocetHracov);
         System.out.format("Znaky hráčov: ");
+        
         for (int i = 0; i < this.pocetHracov; i++) {
             System.out.format("(%s), ", this.hraci.get(i).getZnak());
         }
+        
         System.out.println();
         System.out.format("Počet výherných kôl pre výhru: %d%n", this.pocetVyhernych);
         System.out.format("Počet políčok za sebou pre výhru: %d%n", this.hraciaPlocha.getPocetPolicokZaSebou());
@@ -345,10 +350,8 @@ public class Hra {
     /**
      * Obsahuje základné nastavenia hry
      * (Pridať hráča, Odstrániť hráča, Zmeniť počet výherných, Zmeniť počet políčok za sebou, Zmeniť veľkosť plochy)
-     * 
-     * @TODO - pridať možnosť toho aby používateľ videl aké sú konkrétne nastavenia
      */
-    private void nastaveniaHry() {
+    private void nastaveniaHry() throws IOException {
         this.vypisNastavenychHodnot();
 
         System.out.println("Čo si prajete urobiť?");
@@ -357,89 +360,134 @@ public class Hra {
 
         switch (znak) {
             case 'a':
-            this.pridajHraca(false);
-            this.nastaveniaHry();
-            break;
+                this.pridajHraca(false);
+                this.nastaveniaHry();
+                break;
             case 'd':
-            this.odstranHraca();
-            this.nastaveniaHry();
-            break;
+                this.odstranHraca();
+                this.nastaveniaHry();
+                break;
             case 'p': 
-            System.out.print("Na koľko výherných kôl chcete hrať: ");
-            int novyPocetVyhernych = Hra.kontrolaCislo(this.input);
-            while (novyPocetVyhernych < 1) {
-                System.out.println("Musíte zadať číslo, ktoré je väčšie ako 0.");
                 System.out.print("Na koľko výherných kôl chcete hrať: ");
-                novyPocetVyhernych = Hra.kontrolaCislo(this.input);
-            }
-            this.pocetVyhernych = novyPocetVyhernych;
-            this.nastaveniaHry();
-            break;
-            case 's':
-            System.out.print("Koľko políčok za sebou musí byť v rade pre výhru: ");
-            int novyPocetPolicokZaSebou = Hra.kontrolaCislo(this.input);
-            while (novyPocetPolicokZaSebou < 3 || novyPocetPolicokZaSebou > this.hraciaPlocha.getVelkostPlochy() - 1) {
-                System.out.println("Musíte zadať číslo, ktoré je väčšie ako 2 a menšie alebo rovné ako veľkosť plochy.");
-                System.out.print("Koľko políčok za sebou musí byť v rade pre výhru: ");
-                novyPocetPolicokZaSebou = Hra.kontrolaCislo(this.input);
-            }
-            this.hraciaPlocha = new HraciaPlocha(this.hraciaPlocha.getVelkostPlochy() - 1, novyPocetPolicokZaSebou);
-            this.hraciaPlocha.setPolicka();
-            this.nastaveniaHry();
-            break;
-            case 'v':
-            System.out.print("Veľkosť hracej plochy: ");
-            int novaVelkostPlochy = Hra.kontrolaCislo(input);
-            while ((novaVelkostPlochy < 3 || novaVelkostPlochy > 9) || (this.hraciaPlocha.getPocetPolicokZaSebou() > novaVelkostPlochy)) {
-                if (this.hraciaPlocha.getPocetPolicokZaSebou() > novaVelkostPlochy && novaVelkostPlochy > 2) {
-                    System.out.format("Konkrétna hodnota počtu výherných políčok následujúcich za sebou je: %s%n", this.hraciaPlocha.getPocetPolicokZaSebou());
+                int novyPocetVyhernych = Hra.kontrolaCislo(this.input);
+                while (novyPocetVyhernych < 1) {
+                    System.out.println("Musíte zadať číslo, ktoré je väčšie ako 0.");
+                    System.out.print("Na koľko výherných kôl chcete hrať: ");
+                    novyPocetVyhernych = Hra.kontrolaCislo(this.input);
                 }
-                System.out.format("Musíte zadať číslo väčšie ako 2 a menšie ako 10%n a zároveň číslo nesmie byť menšie ako počet výherných políčok za sebou.%n");
+                this.pocetVyhernych = novyPocetVyhernych;
+                this.nastaveniaHry();
+                break;
+            case 's':
+                System.out.print("Koľko políčok za sebou musí byť v rade pre výhru: ");
+                int novyPocetPolicokZaSebou = Hra.kontrolaCislo(this.input);
+                while (novyPocetPolicokZaSebou < 3 || novyPocetPolicokZaSebou > this.hraciaPlocha.getVelkostPlochy() - 1) {
+                    System.out.println("Musíte zadať číslo, ktoré je väčšie ako 2 a menšie alebo rovné ako veľkosť plochy.");
+                    System.out.print("Koľko políčok za sebou musí byť v rade pre výhru: ");
+                    novyPocetPolicokZaSebou = Hra.kontrolaCislo(this.input);
+                }
+                this.hraciaPlocha = new HraciaPlocha(this.hraciaPlocha.getVelkostPlochy() - 1, novyPocetPolicokZaSebou);
+                this.hraciaPlocha.setPolicka();
+                this.nastaveniaHry();
+                break;
+            case 'v':
                 System.out.print("Veľkosť hracej plochy: ");
-                novaVelkostPlochy = Hra.kontrolaCislo(input);
-            }
-            this.hraciaPlocha = new HraciaPlocha(novaVelkostPlochy, this.hraciaPlocha.getPocetPolicokZaSebou());
-            this.hraciaPlocha.setPolicka();
-            this.nastaveniaHry();
-            break;
+                int novaVelkostPlochy = Hra.kontrolaCislo(input);
+                while ((novaVelkostPlochy < 3 || novaVelkostPlochy > 9) || (this.hraciaPlocha.getPocetPolicokZaSebou() > novaVelkostPlochy)) {
+                    if (this.hraciaPlocha.getPocetPolicokZaSebou() > novaVelkostPlochy && novaVelkostPlochy > 2) {
+                        System.out.format("Konkrétna hodnota počtu výherných políčok následujúcich za sebou je: %s%n", this.hraciaPlocha.getPocetPolicokZaSebou());
+                    }
+                    System.out.format("Musíte zadať číslo väčšie ako 2 a menšie ako 10%n a zároveň číslo nesmie byť menšie ako počet výherných políčok za sebou.%n");
+                    System.out.print("Veľkosť hracej plochy: ");
+                    novaVelkostPlochy = Hra.kontrolaCislo(input);
+                }
+                this.hraciaPlocha = new HraciaPlocha(novaVelkostPlochy, this.hraciaPlocha.getPocetPolicokZaSebou());
+                this.hraciaPlocha.setPolicka();
+                this.nastaveniaHry();
+                break;
             case 'b':
-            this.menuHry();
-            break;
+                this.menuHry();
+                break;
             default:
-            this.nastaveniaHry();
-            break;
+                this.nastaveniaHry();
+                break;
         }
+    }
+    
+    /**
+     * Metóda ukladá práve prebiehajúcu hru do súboru.
+     * 
+     * @param suborNaUlozenie názov a prípona súboru do ktorého chceme dáta zapísať
+     */
+    public void ulozDoSuboru(String suborNaUlozenie) throws IOException{
+        File subor = new File("saves/" + suborNaUlozenie);
+        PrintWriter writer = new PrintWriter(subor);
+        
+        writer.print(this.hraciaPlocha.getVelkostPlochy() + " ");
+        writer.print(this.hraciaPlocha.getPocetPolicokZaSebou() + " ");
+        writer.print(this.pocetHracov + " ");
+        writer.print(this.pocetVyhernych + " ");
+        
+        writer.println();
+        for (int i = 0; i < this.pocetHracov; i++) {
+            writer.format("%s ", this.hraci.get(i).getZnak());
+        }
+        
+        writer.println();
+        for (int i = 0; i < this.pocetHracov; i++) {
+            writer.format("%s ", this.hraci.get(i).getPocetVyhier());
+        }
+        
+        writer.close();
+    }
+    
+    public void citajZoSuboru(String suborNaCitanie) throws IOException {
+        File subor = new File("saves/" + suborNaCitanie);
+        Scanner scanner = new Scanner(subor);
+        
+        while (scanner.hasNextLine()) {
+            int velkost = scanner.nextInt();
+            int pocetPolicokZaSebou = scanner.nextInt();
+            int pocetHracov = scanner.nextInt();
+            int pocetVyhernych = scanner.nextInt();
+            
+            this.hraciaPlocha = new HraciaPlocha(velkost, pocetPolicokZaSebou);
+            this.pocetHracov = pocetHracov;
+            this.pocetVyhernych = pocetVyhernych;
+        }
+        
+        scanner.close();
     }
 
     /**
      * Po každom kole vypíše možnosti, z ktorých si používateľ vyberie jednu.
      * (Pokračovať, Pridať hráča, Odstrániť hráča, Uložiť, Ukončiť)
      */
-    private void moznostiHry() {
+    private void moznostiHry() throws IOException {
         System.out.println("Čo si prajete urobiť?");
         System.out.println("Pokračovať (c)\nUložiť (s)\nVrátiť sa do menu (m)\nUkončiť (e)\n");
         char znak = this.input.next().charAt(0);
 
         switch (znak) {
             case 'c':
-            this.zacniHru();
-            break;
+                this.zacniHru();
+                break;
             case 's':
-            /**
-             * @TODO uložiť do súboru
-             */
-            break;
+                this.ulozDoSuboru("save1.txt");
+                this.moznostiHry();
+                break;
             case 'm':
-            this.menuHry();
-            break;
+                this.menuHry();
+                break;
             case 'e':
-            this.ukoncitHru();
-            this.vypisVyhry();
-            System.exit(0);
-            break;
+                this.ukoncitHru();
+                this.vypisVyhry();
+                System.exit(0);
+                break;
             default:
-            System.out.println("Niečo ste zadali zle.");
-            this.moznostiHry();
+                System.out.println("Niečo ste zadali zle.");
+                this.moznostiHry();
+                break;
         }
     }
 
@@ -472,7 +520,7 @@ public class Hra {
      * koniecHry nerovná true. Po tom ako hráč vyhrá, vypíše sa kto
      * vyhral a hra sa ukončí.
      */
-    private void zacniHru() {
+    private void zacniHru() throws IOException {
         this.hraciaPlocha.setPolicka();
         this.hraciaPlocha.vypisPlochu();
         this.koniecHry = false;
@@ -504,32 +552,32 @@ public class Hra {
      * Vypíše základné menu hry.
      * (Nová hra, Pokračovať v uloženej hre, Nastavenia, Ukončiť hru)
      */
-    public void menuHry() {
+    public void menuHry() throws IOException {
         System.out.println("Čo si prajete urobiť?");
         System.out.println("Nová hra (n)\nPokračovať v uloženej hre (c)\nNastavenia (o)\nUkončiť hru (e)\n");
         char znak = this.input.next().charAt(0);
 
         switch (znak) {
             case 'n':
-            for (int i = 0; i < this.pocetHracov; i++) {
-                this.hraci.get(i).resetujVyhry();
-            }
-            this.zacniHru();
-            break;
+                for (int i = 0; i < this.pocetHracov; i++) {
+                    this.hraci.get(i).resetujVyhry();
+                }
+                this.zacniHru();
+                break;
             case 'c':
-            /**
-             * @TODO - načítanie zo súboru
-             */
-            break;
+                this.citajZoSuboru("save1.txt");
+                System.out.println("Načítané");
+                this.menuHry();
+                break;
             case 'o':
-            this.nastaveniaHry();
-            break;
+                this.nastaveniaHry();
+                break;
             case 'e':
-            System.exit(0);
-            break;
+                System.exit(0);
+                break;
             default:
-            this.menuHry();
-            break;
+                this.menuHry();
+                break;
         }
     }
 }

@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.Scanner;
  
 /**
@@ -11,7 +12,7 @@ public class HraMain {
     /**
      * Hlavná metóda, ktorá spúšťa hru.
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         Scanner input = new Scanner(System.in);
         
         System.out.print("Veľkosť hracej plochy: ");
