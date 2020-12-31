@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 /**
  * Táto trieda slúži na základnú prácu s hracou plochou, t.j. výpis plochy, nastavovanie hodnoty daným políčkam a pod. 
  * 
@@ -19,6 +21,8 @@ public class HraciaPlocha {
      * @param pocetPolicokZaSebou určuje na koľko výherných políčok sa bude hrať
      */
     public HraciaPlocha(int velkost, int pocetPolicokZaSebou) {
+        this.velkostPlochy = velkost + 1;
+        this.pocetPolicokZaSebou = pocetPolicokZaSebou;
         this.zadaneSpravne = true;
         
         for (int i = 0; i < velkost; i++) {
@@ -26,6 +30,18 @@ public class HraciaPlocha {
                 this.hraciaPlocha = new char[this.velkostPlochy][this.velkostPlochy];
             }
         }
+    }
+    
+    /**
+     * Kontroluje, či sa v danej bunke nachádza znak daného hráča.
+     * 
+     * @param hrac hráč, pre ktorého chceme kontrolovať bunku
+     * @param riadok riadok v ktorom budeme kontrolovať bunku
+     * @param stlpec stĺpec v ktorom budeme kontrolovať bunku
+     * @return boolean vráti hodnotu true ak daná bunka obsahuje znak daného hráča
+     */
+    private boolean vyhraBunka(Hrac hrac, int riadok, int stlpec) {
+        return this.hraciaPlocha[riadok][stlpec] == hrac.getZnak();
     }
     
     /**
@@ -45,15 +61,12 @@ public class HraciaPlocha {
     }
     
     /**
-     * Kontroluje, či sa v danej bunke nachádza znak daného hráča.
+     * Vráti nám hodnotu, koľko políčok následujúcich za sebou je potrebných na výhru kola.
      * 
-     * @param hrac hráč, pre ktorého chceme kontrolovať bunku
-     * @param riadok riadok v ktorom budeme kontrolovať bunku
-     * @param stlpec stĺpec v ktorom budeme kontrolovať bunku
-     * @return boolean vráti hodnotu true ak daná bunka obsahuje znak daného hráča
+     * @return int vráti počet políčok následujúcich za sebou potrebných na výhru kola.
      */
-    public boolean vyhraBunka(Hrac hrac, int riadok, int stlpec) {
-        return this.hraciaPlocha[riadok][stlpec] == hrac.getZnak();
+    public int getPocetPolicokZaSebou() {
+        return this.pocetPolicokZaSebou;
     }
     
     /**

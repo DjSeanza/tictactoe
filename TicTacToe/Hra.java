@@ -14,7 +14,6 @@ public class Hra {
     private HraciaPlocha hraciaPlocha;
     private int pocetHracov;
     private int pocetVyhernych;
-    private int pocetPolicokZaSebou;
     private boolean koniecHry;
     private Hrac vyhercaKola;
     
@@ -32,11 +31,13 @@ public class Hra {
      * @param pocetHracov počet hráčov
      * @param pocetVyhernych určuje na koľko výherných bodov sa hrá
      * 
+     * @TODO - na this.pocetPolicokZaSebou urobiť getter a urobiť to cez to !!!!!!!!!!!!!
      * @TODO - pridať private metódy, napríklad na menu a takto
      * @TODO - urobiť bota
      */
     public Hra(int velkost, int pocetPolicokZaSebou, int pocetHracov, int pocetVyhernych) { 
-        this.pocetPolicokZaSebou = pocetPolicokZaSebou;
+        this.pocetHracov = pocetHracov;
+        this.pocetVyhernych = pocetVyhernych;
         
         this.hraci = new ArrayList<Hrac>();
         this.vyherci = new ArrayList<Hrac>();
@@ -59,7 +60,7 @@ public class Hra {
      * @param input berie input, ktorý hráč zadal
      * @return int je číslo, ktoré berieme z inputu používateľa
      */
-    private static int kontrolaCislo(Scanner input) {
+    public static int kontrolaCislo(Scanner input) {
         while (!input.hasNextInt()) {
             System.out.println("Musíte zadať číslo.");
             input.next();
@@ -73,7 +74,7 @@ public class Hra {
      * @param jeVKonstruktore určuje, či sa pridávanie hráčov nachádza v konštruktore
      * @return boolean vráti hodnotu true ak sa hráč úspešne pridal
      */
-    public boolean pridajHraca(boolean jeVKonstruktore) {
+    private boolean pridajHraca(boolean jeVKonstruktore) {
         /* 
          * this.hraciaPlocha.getVelkostPlochy() - 2
          * pretože do veľkosti plochy sa rátajú aj stĺpce a riadky s číslami
@@ -110,7 +111,7 @@ public class Hra {
      * 
      * @return boolean vracia hodnotu true ak sa podarí odstrániť hráča
      */
-    public boolean odstranHraca() {
+    private boolean odstranHraca() {
         if (this.pocetHracov <= 2) {
             System.out.println("Musia byť minimálne dvaja hráči.");
             return false;
@@ -144,7 +145,7 @@ public class Hra {
      * @param hrac konkrétny hráč, pre ktorého chceme nastaviť 
      * políčko na hodnotu znaku, ktorý si zadal
      */
-    public void setPolickoPreHraca(int hrac) {
+    private void setPolickoPreHraca(int hrac) {
         System.out.println("Kolo hráča " + (hrac + 1) + " (" + this.hraci.get(hrac).getZnak() + ").");
         
         /* 
@@ -153,11 +154,11 @@ public class Hra {
          * takto sa stále bude pýtať na nové číslo a bude ho kontrolovať
          */
         System.out.println("Riadok: ");
-        int riadok = Hra.kontrolaCislo(this.input);
+        int riadok = this.kontrolaCislo(this.input);
         while (riadok < 1 || riadok > this.hraciaPlocha.getVelkostPlochy() - 1) {
             System.out.println("Musíte zadať číslo, ktoré bude väčšie ako 0\na zároveň nebude väčšie ako je veľkosť hracej plochy.");
             System.out.println("Riadok: ");
-            riadok = Hra.kontrolaCislo(this.input);
+            riadok = this.kontrolaCislo(this.input);
         }
         
         /* 
@@ -166,17 +167,17 @@ public class Hra {
          * takto sa stále bude pýtať na nové číslo a bude ho kontrolovať
          */
         System.out.println("Stĺpec: ");
-        int stlpec = Hra.kontrolaCislo(this.input);
+        int stlpec = this.kontrolaCislo(this.input);
         while (stlpec < 1 || stlpec > this.hraciaPlocha.getVelkostPlochy() - 1) {
             System.out.println("Musíte zadať číslo, ktoré bude väčšie ako 0\na zároveň nebude väčšie ako je veľkosť hracej plochy.");
             System.out.println("Stĺpec: ");
-            stlpec = Hra.kontrolaCislo(this.input);
+            stlpec = this.kontrolaCislo(this.input);
         }
         
         this.hraciaPlocha.setPolicko(riadok, stlpec, this.hraci.get(hrac));
         this.hraciaPlocha.vypisPlochu();
         
-        /*
+        /* 
          * ak nebude políčko zadané správne (t.j. ak už sa na danom mieste niečo nachádza
          * alebo je zle zadaný stĺpec alebo riadok), tak sa vykoná táto metóda znovu.
          */
@@ -190,7 +191,7 @@ public class Hra {
      * 
      * @TODO - fujky metóda, treba ju upraviť
      */
-    public void vyhraKola() {
+    private void vyhraKola() {
         for (Hrac aktualny: this.hraci) {
             for (int i = 0; i < this.hraciaPlocha.getVelkostPlochy(); i++) {
                 if (!this.koniecHry) {
@@ -230,7 +231,7 @@ public class Hra {
     /**
      * Metóda určuje, či niekto vyhral a ak áno tak kto konkrétne vyhral.
      */
-    public void vyhra() {
+    private void vyhra() {
         for (int j = 0; j < this.vyherci.size(); j++) {
             this.vyherci.remove(0);
         }
@@ -241,7 +242,7 @@ public class Hra {
                 this.vypisVyhry();
                 this.koniecHry = true;
                 this.vyhercaKola = aktualny;
-                this.menuHry();
+                this.menuHry(); 
             }
         }
         
@@ -250,7 +251,7 @@ public class Hra {
     /**
      * Metóda nastaví koniec hry na true a výhercu na null.
      */
-    public void remiza() {
+    private void remiza() {
         if (this.hraciaPlocha.jeZaplnena()) {
             this.koniecHry = true;
             this.vyhercaKola = null;
@@ -260,7 +261,7 @@ public class Hra {
     /**
      * Vypíše kto vyhrál a taktiež body všetkých hráčov.
      */
-    public void vypisVyhry() {
+    private void vypisVyhry() {
         if (this.vyhercaKola == null && this.vyherci.size() == 0) {
             System.out.format("Je to remíza.%n");
             System.out.println("------------------------------------");
@@ -299,9 +300,24 @@ public class Hra {
     }
     
     /**
+     * Metóda na výpis práve nastavených hodnôt hry.
+     */
+    private void vypisNastavenychHodnot() {
+        System.out.format("Počet Hráčov: %s%n", this.pocetHracov);
+        System.out.format("Znaky hráčov: ");
+        for (int i = 0; i < this.pocetHracov; i++) {
+            System.out.format("(%s), ", this.hraci.get(i).getZnak());
+        }
+        System.out.println();
+        System.out.format("Počet výherných kôl pre výhru: %d%n", this.pocetVyhernych);
+        System.out.format("Počet políčok za sebou pre výhru: %d%n", this.hraciaPlocha.getPocetPolicokZaSebou());
+        System.out.format("Velkosť plochy: %d%n%n", this.hraciaPlocha.getVelkostPlochy() - 1);
+    }
+    
+    /**
      * Metóda ukončí hru a vypíše konečného výhercu podľa počtu vyhratých kôl.
      */
-    public void ukoncitHru() {
+    private void ukoncitHru() {
         this.vyhercaKola = null;
         for (int i = 0; i < this.vyherci.size(); i++) {
             this.vyherci.remove(0);
@@ -326,45 +342,14 @@ public class Hra {
     }
     
     /**
-     * Vypíše základné menu hry.
-     * (Nová hra, Pokračovať v uloženej hre, Nastavenia, Ukončiť hru)
-     */
-    public void menuHry() {
-        System.out.println("Čo si prajete urobiť?");
-        System.out.println("Nová hra (n)\nPokračovať v uloženej hre (c)\nNastavenia (o)\nUkončiť hru (e)\n");
-        char znak = this.input.next().charAt(0);
-        
-        switch (znak) {
-            case 'n':
-                for (int i = 0; i < this.pocetHracov; i++) {
-                    this.hraci.get(i).resetujVyhry();
-                }
-                this.zacniHru();
-                break;
-            case 'c':
-                /**
-                 * @TODO - načítanie zo súboru
-                 */
-                break;
-            case 'o':
-                this.nastaveniaHry();
-                break;
-            case 'e':
-                System.exit(0);
-                break;
-            default:
-                this.menuHry();
-                break;
-        }
-    }
-    
-    /**
      * Obsahuje základné nastavenia hry
-     * (Pridať hráča, Odstrániť hráča, Zmeniť počet výherných
+     * (Pridať hráča, Odstrániť hráča, Zmeniť počet výherných, Zmeniť počet políčok za sebou, Zmeniť veľkosť plochy)
      * 
      * @TODO - pridať možnosť toho aby používateľ videl aké sú konkrétne nastavenia
      */
-    public void nastaveniaHry() {
+    private void nastaveniaHry() {
+        this.vypisNastavenychHodnot();
+        
         System.out.println("Čo si prajete urobiť?");
         System.out.println("Pridať hráča (a)\nOdstrániť hráča (d)\nZmeniť počet výherných (p)\nZmeniť počet políčok za sebou (s)\nZmeniť veľkosť plochy (v)\nSpäť (b)\n");
         char znak = this.input.next().charAt(0);
@@ -378,30 +363,41 @@ public class Hra {
                 this.odstranHraca();
                 this.nastaveniaHry();
                 break;
-            case 'p':
-                boolean jeZadaneSpravne = false;
-                do {
-                    System.out.print("Zadajte číslo väčšie ako 0: ");
-                    int novyPocetVyhernych = this.input.nextInt();
-                    if (novyPocetVyhernych > 0) {
-                        this.pocetVyhernych = novyPocetVyhernych;
-                        jeZadaneSpravne = true;
-                    }
-                } while (!jeZadaneSpravne);
+            case 'p': 
+                System.out.print("Na koľko výherných kôl chcete hrať: ");
+                int novyPocetVyhernych = Hra.kontrolaCislo(this.input);
+                while (novyPocetVyhernych < 1) {
+                    System.out.println("Musíte zadať číslo, ktoré je väčšie ako 0.");
+                    System.out.print("Na koľko výherných kôl chcete hrať: ");
+                    novyPocetVyhernych = Hra.kontrolaCislo(this.input);
+                }
+                this.pocetVyhernych = novyPocetVyhernych;
                 this.nastaveniaHry();
                 break;
             case 's':
-                System.out.print("Zadajte číslo od 3 po veľkosť hracej plochy: ");
-                int novyPocetPolicokZaSebou = this.input.nextInt();
-                this.pocetPolicokZaSebou = novyPocetPolicokZaSebou;
-                this.hraciaPlocha = new HraciaPlocha(this.hraciaPlocha.getVelkostPlochy() - 1, this.pocetPolicokZaSebou);
+                System.out.print("Koľko políčok za sebou musí byť v rade pre výhru: ");
+                int novyPocetPolicokZaSebou = Hra.kontrolaCislo(this.input);
+                while (novyPocetPolicokZaSebou < 3 || novyPocetPolicokZaSebou > this.hraciaPlocha.getVelkostPlochy() - 1) {
+                    System.out.println("Musíte zadať číslo, ktoré je väčšie ako 2 a menšie alebo rovné ako veľkosť plochy.");
+                    System.out.print("Koľko políčok za sebou musí byť v rade pre výhru: ");
+                    novyPocetPolicokZaSebou = Hra.kontrolaCislo(this.input);
+                }
+                this.hraciaPlocha = new HraciaPlocha(this.hraciaPlocha.getVelkostPlochy() - 1, novyPocetPolicokZaSebou);
                 this.hraciaPlocha.setPolicka();
                 this.nastaveniaHry();
                 break;
             case 'v':
-                System.out.print("Zadajte číslo od 3 do 13: ");
-                int velkostPlochy = this.input.nextInt();
-                this.hraciaPlocha = new HraciaPlocha(velkostPlochy, this.pocetPolicokZaSebou);
+                System.out.print("Veľkosť hracej plochy: ");
+                int novaVelkostPlochy = Hra.kontrolaCislo(input);
+                while ((novaVelkostPlochy < 3 || novaVelkostPlochy > 9) || (this.hraciaPlocha.getPocetPolicokZaSebou() > novaVelkostPlochy)) {
+                    if (this.hraciaPlocha.getPocetPolicokZaSebou() > novaVelkostPlochy && novaVelkostPlochy > 2) {
+                        System.out.format("Konkrétna hodnota počtu výherných políčok následujúcich za sebou je: %s%n", this.hraciaPlocha.getPocetPolicokZaSebou());
+                    }
+                    System.out.format("Musíte zadať číslo väčšie ako 2 a menšie ako 10%n a zároveň číslo nesmie byť menšie ako počet výherných políčok za sebou.%n");
+                    System.out.print("Veľkosť hracej plochy: ");
+                    novaVelkostPlochy = Hra.kontrolaCislo(input);
+                }
+                this.hraciaPlocha = new HraciaPlocha(novaVelkostPlochy, this.hraciaPlocha.getPocetPolicokZaSebou());
                 this.hraciaPlocha.setPolicka();
                 this.nastaveniaHry();
                 break;
@@ -418,7 +414,7 @@ public class Hra {
      * Po každom kole vypíše možnosti, z ktorých si používateľ vyberie jednu.
      * (Pokračovať, Pridať hráča, Odstrániť hráča, Uložiť, Ukončiť)
      */
-    public void moznostiHry() {
+    private void moznostiHry() {
         System.out.println("Čo si prajete urobiť?");
         System.out.println("Pokračovať (c)\nUložiť (s)\nVrátiť sa do menu (m)\nUkončiť (e)\n");
         char znak = this.input.next().charAt(0);
@@ -453,7 +449,7 @@ public class Hra {
      * 
      * @TODO - aby kolá šli náhodne, nie aby vždy začínal prvý hráč. Každé kolo nech sa dá shuffle a nech sa ide podľa toho
      */
-    public void zacniHru() {
+    private void zacniHru() {
         this.hraciaPlocha.setPolicka();
         this.hraciaPlocha.vypisPlochu();
         this.koniecHry = false;
@@ -478,5 +474,38 @@ public class Hra {
         
         this.vypisVyhry();
         this.moznostiHry();
+    }
+    
+    /**
+     * Vypíše základné menu hry.
+     * (Nová hra, Pokračovať v uloženej hre, Nastavenia, Ukončiť hru)
+     */
+    public void menuHry() {
+        System.out.println("Čo si prajete urobiť?");
+        System.out.println("Nová hra (n)\nPokračovať v uloženej hre (c)\nNastavenia (o)\nUkončiť hru (e)\n");
+        char znak = this.input.next().charAt(0);
+        
+        switch (znak) {
+            case 'n':
+                for (int i = 0; i < this.pocetHracov; i++) {
+                    this.hraci.get(i).resetujVyhry();
+                }
+                this.zacniHru();
+                break;
+            case 'c':
+                /**
+                 * @TODO - načítanie zo súboru
+                 */
+                break;
+            case 'o':
+                this.nastaveniaHry();
+                break;
+            case 'e':
+                System.exit(0);
+                break;
+            default:
+                this.menuHry();
+                break;
+        }
     }
 }
