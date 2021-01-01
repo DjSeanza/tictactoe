@@ -422,6 +422,18 @@ public class Hra {
      * @param suborNaUlozenie názov a prípona súboru do ktorého chceme dáta zapísať
      */
     public void ulozDoSuboru(String suborNaUlozenie) throws IOException {
+        boolean vyhralHrac = false;
+        for (int i = 0; i < this.pocetHracov; i++) {
+            if (this.hraci.get(i).getPocetVyhier() == this.pocetVyhernych) {
+                vyhralHrac = true;
+            }
+        }
+        
+        if (vyhralHrac) {
+            System.out.format("Hra sa nedá uložiť. Jeden z hráčov už vyhral.%n");
+            return;
+        }
+        
         File subor = new File("saves/" + suborNaUlozenie);
         PrintWriter writer = new PrintWriter(subor);
         
