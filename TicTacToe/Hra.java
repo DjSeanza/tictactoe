@@ -15,13 +15,14 @@ import java.util.Scanner;
 public class Hra {
     private ArrayList<Hrac> hraci;
     private ArrayList<Hrac> vyherci;
+    
     private HraciaPlocha hraciaPlocha;
+    private Hrac vyhercaKola;
     private int pocetHracov;
     private int pocetVyhernych;
     private boolean koniecHry;
-    private Hrac vyhercaKola;
-
-    private Scanner input = new Scanner(System.in);
+    
+    private Scanner input;
 
     /**
      * Inicializujeme si základné hodnoty atribútov,
@@ -40,6 +41,7 @@ public class Hra {
      * @TODO - urobiť bota
      */
     public Hra(int velkost, int pocetPolicokZaSebou, int pocetHracov, int pocetVyhernych) { 
+        this.input = new Scanner(System.in);
         this.pocetHracov = pocetHracov;
         this.pocetVyhernych = pocetVyhernych;
 
@@ -88,7 +90,7 @@ public class Hra {
             System.out.println("Príliš veľa hráčov, nedá sa pridať viac.");
             return false;
         }
-
+        
         System.out.print("Znak hráča " + (this.hraci.size() + 1) + ": ");
         char znak = this.input.next().charAt(0);
         boolean jeZnakRovnaky = false;
@@ -419,11 +421,11 @@ public class Hra {
      * 
      * @param suborNaUlozenie názov a prípona súboru do ktorého chceme dáta zapísať
      */
-    public void ulozDoSuboru(String suborNaUlozenie) throws IOException{
+    public void ulozDoSuboru(String suborNaUlozenie) throws IOException {
         File subor = new File("saves/" + suborNaUlozenie);
         PrintWriter writer = new PrintWriter(subor);
         
-        writer.print(this.hraciaPlocha.getVelkostPlochy() + " ");
+        writer.print((this.hraciaPlocha.getVelkostPlochy() - 1) + " ");
         writer.print(this.hraciaPlocha.getPocetPolicokZaSebou() + " ");
         writer.print(this.pocetHracov + " ");
         writer.print(this.pocetVyhernych + " ");
@@ -441,19 +443,47 @@ public class Hra {
         writer.close();
     }
     
+    /**
+     * Metóda načítava uložené dáta zo súboru.
+     * 
+     * @param suborNaCitanie určuje súbor, z ktorého chceme dáta čítať
+     */
     public void citajZoSuboru(String suborNaCitanie) throws IOException {
         File subor = new File("saves/" + suborNaCitanie);
         Scanner scanner = new Scanner(subor);
         
+        ArrayList<Hrac> zalohaHraci = new ArrayList<Hrac>();
+        int staryPocetHracov = this.hraci.size();
+        for (int i = 0; i < staryPocetHracov; i++) {
+            System.out.println(this.hraci.size());
+            zalohaHraci.add(this.hraci.get(0));
+            this.hraci.remove(0);
+            System.out.print(zalohaHraci.get(i).getZnak());
+        }
+        
         while (scanner.hasNextLine()) {
-            int velkost = scanner.nextInt();
-            int pocetPolicokZaSebou = scanner.nextInt();
-            int pocetHracov = scanner.nextInt();
-            int pocetVyhernych = scanner.nextInt();
+            int novaVelkost = scanner.nextInt();
+            int novyPocetPolicokZaSebou = scanner.nextInt();
+            int novyPocetHracov = scanner.nextInt();
+            int novyPocetVyhernych = scanner.nextInt();
+            this.hraciaPlocha = new HraciaPlocha(novaVelkost, novyPocetPolicokZaSebou);
+            this.pocetHracov = novyPocetHracov;
+            this.pocetVyhernych = novyPocetVyhernych;
             
-            this.hraciaPlocha = new HraciaPlocha(velkost, pocetPolicokZaSebou);
-            this.pocetHracov = pocetHracov;
-            this.pocetVyhernych = pocetVyhernych;
+            for (int i = 0; i < this.pocetHracov; i++) {
+                char znak = scanner.next().charAt(0);
+                this.hraci.add(new Hrac(znak));
+            }
+            
+            for (int i = 0; i < this.pocetHracov; i++) { 
+                int pocetBodov = scanner.nextInt();
+                
+                for (int j = 0; j < pocetBodov; j++) {
+                    this.hraci.get(i).pridajVyhru();
+                }
+            }
+            
+            scanner.nextLine();
         }
         
         scanner.close();
@@ -496,7 +526,7 @@ public class Hra {
      * 
      * @return int[] vráti náhodne zamiešané poradie hráčov
      */
-    public int[] zamiesatPoradieHracov() {
+    private int[] zamiesatPoradieHracov() {
         int[] randomPoradie = new int[this.pocetHracov];
         Random random = new Random();
         
@@ -567,7 +597,7 @@ public class Hra {
             case 'c':
                 this.citajZoSuboru("save1.txt");
                 System.out.println("Načítané");
-                this.menuHry();
+                this.zacniHru();
                 break;
             case 'o':
                 this.nastaveniaHry();

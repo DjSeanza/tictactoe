@@ -1,5 +1,3 @@
-import java.util.Scanner;
-
 /**
  * Táto trieda slúži na základnú prácu s hracou plochou, t.j. výpis plochy, nastavovanie hodnoty daným políčkam a pod. 
  * 

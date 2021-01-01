@@ -18,6 +18,7 @@ comment13.target=void\ ulozDoSuboru(java.lang.String)
 comment13.text=\r\n\ Met\u00F3da\ uklad\u00E1\ pr\u00E1ve\ prebiehaj\u00FAcu\ hru\ do\ s\u00FAboru.\r\n\ \r\n\ @param\ suborNaUlozenie\ n\u00E1zov\ a\ pr\u00EDpona\ s\u00FAboru\ do\ ktor\u00E9ho\ chceme\ d\u00E1ta\ zap\u00EDsa\u0165\r\n
 comment14.params=suborNaCitanie
 comment14.target=void\ citajZoSuboru(java.lang.String)
+comment14.text=\r\n\ Met\u00F3da\ na\u010D\u00EDtava\ ulo\u017Een\u00E9\ d\u00E1ta\ zo\ s\u00FAboru.\r\n\ \r\n\ @param\ suborNaCitanie\ ur\u010Duje\ s\u00FAbor,\ z\ ktor\u00E9ho\ chceme\ d\u00E1ta\ \u010D\u00EDta\u0165\r\n
 comment15.params=
 comment15.target=void\ moznostiHry()
 comment15.text=\r\n\ Po\ ka\u017Edom\ kole\ vyp\u00ED\u0161e\ mo\u017Enosti,\ z\ ktor\u00FDch\ si\ pou\u017E\u00EDvate\u013E\ vyberie\ jednu.\r\n\ (Pokra\u010Dova\u0165,\ Prida\u0165\ hr\u00E1\u010Da,\ Odstr\u00E1ni\u0165\ hr\u00E1\u010Da,\ Ulo\u017Ei\u0165,\ Ukon\u010Di\u0165)\r\n
