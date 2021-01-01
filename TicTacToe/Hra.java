@@ -1,4 +1,4 @@
-import java.util.ArrayList;
+import java.util.ArrayList; 
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -394,14 +394,14 @@ public class Hra {
                 break;
             case 'v':
                 System.out.print("Veľkosť hracej plochy: ");
-                int novaVelkostPlochy = Hra.kontrolaCislo(input);
+                int novaVelkostPlochy = Hra.kontrolaCislo(this.input);
                 while ((novaVelkostPlochy < 3 || novaVelkostPlochy > 9) || (this.hraciaPlocha.getPocetPolicokZaSebou() > novaVelkostPlochy)) {
                     if (this.hraciaPlocha.getPocetPolicokZaSebou() > novaVelkostPlochy && novaVelkostPlochy > 2) {
                         System.out.format("Konkrétna hodnota počtu výherných políčok následujúcich za sebou je: %s%n", this.hraciaPlocha.getPocetPolicokZaSebou());
                     }
                     System.out.format("Musíte zadať číslo väčšie ako 2 a menšie ako 10%n a zároveň číslo nesmie byť menšie ako počet výherných políčok za sebou.%n");
                     System.out.print("Veľkosť hracej plochy: ");
-                    novaVelkostPlochy = Hra.kontrolaCislo(input);
+                    novaVelkostPlochy = Hra.kontrolaCislo(this.input);
                 }
                 this.hraciaPlocha = new HraciaPlocha(novaVelkostPlochy, this.hraciaPlocha.getPocetPolicokZaSebou());
                 this.hraciaPlocha.setPolicka();
