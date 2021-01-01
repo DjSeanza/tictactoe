@@ -421,7 +421,7 @@ public class Hra {
      * 
      * @param suborNaUlozenie názov a prípona súboru do ktorého chceme dáta zapísať
      */
-    public void ulozDoSuboru(String suborNaUlozenie) throws IOException {
+    public boolean ulozDoSuboru(String suborNaUlozenie) throws IOException {
         boolean vyhralHrac = false;
         for (int i = 0; i < this.pocetHracov; i++) {
             if (this.hraci.get(i).getPocetVyhier() == this.pocetVyhernych) {
@@ -431,7 +431,7 @@ public class Hra {
         
         if (vyhralHrac) {
             System.out.format("Hra sa nedá uložiť. Jeden z hráčov už vyhral.%n");
-            return;
+            return false;
         }
         
         File subor = new File("saves/" + suborNaUlozenie);
@@ -453,6 +453,7 @@ public class Hra {
         }
         
         writer.close();
+        return true;
     }
     
     /**
@@ -460,45 +461,46 @@ public class Hra {
      * 
      * @param suborNaCitanie určuje súbor, z ktorého chceme dáta čítať
      */
-    public void citajZoSuboru(String suborNaCitanie) throws IOException {
+    public boolean citajZoSuboru(String suborNaCitanie) throws IOException {
         File subor = new File("saves/" + suborNaCitanie);
         Scanner scanner = new Scanner(subor);
         
-        ArrayList<Hrac> zalohaHraci = new ArrayList<Hrac>();
-        int staryPocetHracov = this.hraci.size();
-        for (int i = 0; i < staryPocetHracov; i++) {
-            System.out.println(this.hraci.size());
-            zalohaHraci.add(this.hraci.get(0));
-            this.hraci.remove(0);
-            System.out.print(zalohaHraci.get(i).getZnak());
-        }
-        
-        while (scanner.hasNextLine()) {
-            int novaVelkost = scanner.nextInt();
-            int novyPocetPolicokZaSebou = scanner.nextInt();
-            int novyPocetHracov = scanner.nextInt();
-            int novyPocetVyhernych = scanner.nextInt();
-            this.hraciaPlocha = new HraciaPlocha(novaVelkost, novyPocetPolicokZaSebou);
-            this.pocetHracov = novyPocetHracov;
-            this.pocetVyhernych = novyPocetVyhernych;
-            
-            for (int i = 0; i < this.pocetHracov; i++) {
-                char znak = scanner.next().charAt(0);
-                this.hraci.add(new Hrac(znak));
-            }
-            
-            for (int i = 0; i < this.pocetHracov; i++) { 
-                int pocetBodov = scanner.nextInt();
+        try {
+            while (scanner.hasNextLine()) {
+                int novaVelkost = scanner.nextInt();
+                int novyPocetPolicokZaSebou = scanner.nextInt();
+                int novyPocetHracov = scanner.nextInt();
+                int novyPocetVyhernych = scanner.nextInt();
+                this.hraciaPlocha = new HraciaPlocha(novaVelkost, novyPocetPolicokZaSebou);
+                this.pocetHracov = novyPocetHracov;
+                this.pocetVyhernych = novyPocetVyhernych;
                 
-                for (int j = 0; j < pocetBodov; j++) {
-                    this.hraci.get(i).pridajVyhru();
+                if (scanner.hasNext()) {
+                    for (int i = 0; i < this.pocetHracov; i++) {
+                        char znak = scanner.next().charAt(0);
+                        this.hraci.add(new Hrac(znak));
+                    }
                 }
+                
+                if (scanner.hasNextInt()) {
+                    for (int i = 0; i < this.pocetHracov; i++) { 
+                        int pocetBodov = scanner.nextInt();
+                        
+                        for (int j = 0; j < pocetBodov; j++) {
+                            this.hraci.get(i).pridajVyhru();
+                        }
+                    }
+                }
+                
+                scanner.nextLine();
             }
-            
-            scanner.nextLine();
+        } catch (Exception e) {
+            System.out.format("Poškodený súbor. Hra sa nedá načítať.%n");
+            return false;
         }
         
         scanner.close();
+        return true;
     }
 
     /**
