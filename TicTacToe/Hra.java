@@ -36,8 +36,6 @@ public class Hra {
      * @param pocetHracov počet hráčov
      * @param pocetVyhernych určuje na koľko výherných bodov sa hrá
      * 
-     * @TODO - na this.pocetPolicokZaSebou urobiť getter a urobiť to cez to !!!!!!!!!!!!!
-     * @TODO - pridať private metódy, napríklad na menu a takto
      * @TODO - urobiť bota
      */
     public Hra(int velkost, int pocetPolicokZaSebou, int pocetHracov, int pocetVyhernych) { 
@@ -323,6 +321,53 @@ public class Hra {
     }
     
     /**
+     * Metóda vypisuje údaje, ktoré si načíta zo súboru
+     * 
+     * @param suborNaCitanie určuje súbor, z ktorého chceme dáta čítať
+     */
+    private void vypisZoSuboru(String suborNaCitanie) throws IOException {
+        File subor = new File("saves/" + suborNaCitanie);
+        Scanner scanner = new Scanner(subor);
+        
+        try {
+            while (scanner.hasNextLine()) {
+                int novaVelkost = scanner.nextInt();
+                int novyPocetPolicokZaSebou = scanner.nextInt();
+                int novyPocetHracov = scanner.nextInt();
+                int novyPocetVyhernych = scanner.nextInt();
+                System.out.format("Počet Hráčov: %s%n", novyPocetHracov);
+                System.out.format("Znaky hráčov: ");
+                if (scanner.hasNext()) {
+                    for (int i = 0; i < this.pocetHracov; i++) {
+                        char znak = scanner.next().charAt(0);
+                        System.out.format("(%s), ", znak);
+                    }
+                }
+                System.out.println();
+                
+                System.out.format("Výhry hráčov: ");
+                if (scanner.hasNextInt()) {
+                    for (int i = 0; i < this.pocetHracov; i++) { 
+                        int pocetBodov = scanner.nextInt();
+                        System.out.format("(%d), ", pocetBodov);
+                    }
+                }
+                System.out.println(); 
+                
+                System.out.format("Počet výherných kôl pre výhru: %d%n", novyPocetVyhernych);
+                System.out.format("Počet políčok za sebou pre výhru: %d%n", novyPocetPolicokZaSebou);
+                System.out.format("Velkosť plochy: %d%n%n", novaVelkost);
+                
+                scanner.nextLine();
+            }
+        } catch (Exception e) {
+            System.out.format("Súbor sa nedá prečítať.%n%n");
+        }
+        
+        scanner.close();
+    }
+    
+    /**
      * Metóda ukončí hru a vypíše konečného výhercu podľa počtu vyhratých kôl.
      */
     private void ukoncitHru() {
@@ -478,6 +523,23 @@ public class Hra {
                 int novyPocetPolicokZaSebou = scanner.nextInt();
                 int novyPocetHracov = scanner.nextInt();
                 int novyPocetVyhernych = scanner.nextInt();
+                
+                /*
+                 * Preconditions
+                 */
+                if (novaVelkost < 3 || novaVelkost > 9) {
+                    return false;
+                }
+                if (novyPocetPolicokZaSebou < 3 || novyPocetPolicokZaSebou > novaVelkost) {
+                    return false;
+                }
+                if (novyPocetHracov < 2 || novyPocetHracov > novaVelkost - 1) {
+                    return false;
+                }
+                if (novyPocetVyhernych < 1) {
+                    return false;
+                }
+                
                 this.hraciaPlocha = new HraciaPlocha(novaVelkost, novyPocetPolicokZaSebou);
                 this.pocetHracov = novyPocetHracov;
                 this.pocetVyhernych = novyPocetVyhernych;
@@ -492,6 +554,10 @@ public class Hra {
                 if (scanner.hasNextInt()) {
                     for (int i = 0; i < this.pocetHracov; i++) { 
                         int pocetBodov = scanner.nextInt();
+                        
+                        if (pocetBodov < 0) {
+                            return false;
+                        }
                        
                         for (int j = 0; j < pocetBodov; j++) {
                             this.hraci.get(i).pridajVyhru();
@@ -512,53 +578,6 @@ public class Hra {
         
         scanner.close();
         return true;
-    }
-    
-    /**
-     * Metóda vypisuje údaje, ktoré si načíta zo súboru
-     * 
-     * @param suborNaCitanie určuje súbor, z ktorého chceme dáta čítať
-     */
-    private void vypisZoSuboru(String suborNaCitanie) throws IOException {
-        File subor = new File("saves/" + suborNaCitanie);
-        Scanner scanner = new Scanner(subor);
-        
-        try {
-            while (scanner.hasNextLine()) {
-                int novaVelkost = scanner.nextInt();
-                int novyPocetPolicokZaSebou = scanner.nextInt();
-                int novyPocetHracov = scanner.nextInt();
-                int novyPocetVyhernych = scanner.nextInt();
-                System.out.format("Počet Hráčov: %s%n", novyPocetHracov);
-                System.out.format("Znaky hráčov: ");
-                if (scanner.hasNext()) {
-                    for (int i = 0; i < this.pocetHracov; i++) {
-                        char znak = scanner.next().charAt(0);
-                        System.out.format("(%s), ", znak);
-                    }
-                }
-                System.out.println();
-                
-                System.out.format("Výhry hráčov: ");
-                if (scanner.hasNextInt()) {
-                    for (int i = 0; i < this.pocetHracov; i++) { 
-                        int pocetBodov = scanner.nextInt();
-                        System.out.format("(%d), ", pocetBodov);
-                    }
-                }
-                System.out.println(); 
-                
-                System.out.format("Počet výherných kôl pre výhru: %d%n", novyPocetVyhernych);
-                System.out.format("Počet políčok za sebou pre výhru: %d%n", novyPocetPolicokZaSebou);
-                System.out.format("Velkosť plochy: %d%n%n", novaVelkost);
-                
-                scanner.nextLine();
-            }
-        } catch (Exception e) {
-            System.out.format("Súbor sa nedá prečítať.%n%n");
-        }
-        
-        scanner.close();
     }
     
     /**
@@ -735,10 +754,10 @@ public class Hra {
                 break;
             case 'c':
                 if (this.vyberSave(false)) {
-                    System.out.format("Načítané");
+                    System.out.format("Načítané%n");
                     this.zacniHru();
                 } else {
-                    System.out.println("Hru sa nepodarilo načítať.");
+                    System.out.println("Hru sa nepodarilo načítať. Súbor je zrejme poškodený.");
                 }
                 this.menuHry();
                 break;
