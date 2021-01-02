@@ -80,7 +80,7 @@ public class Hra {
      * @return int vráti číselnú hodnotu úložného priestoru
      */
     private int kontrolaPocetUloznychSuborov(String otazka) {
-        System.out.print(otazka);
+        System.out.print(otazka + " ");
         int slot = Hra.kontrolaCislo(this.input);
         while (slot < 1 || slot > this.POCET_ULOZNYCH_SLOTOV) {
             System.out.format("Musíte zadať číslo slotu, do ktorého chcete hru uložiť.%n");
@@ -88,6 +88,53 @@ public class Hra {
             slot = Hra.kontrolaCislo(this.input);
         }
         return slot;
+    }
+    
+    /**
+     * Metóda nastavuje hodnotu počtu výherných kôl.
+     */
+    private void setPocetVyhernychKol() {
+        System.out.print("Na koľko výherných kôl chcete hrať: ");
+        int novyPocetVyhernych = Hra.kontrolaCislo(this.input);
+        while (novyPocetVyhernych < 1) {
+            System.out.println("Musíte zadať číslo, ktoré je väčšie ako 0.");
+            System.out.print("Na koľko výherných kôl chcete hrať: ");
+            novyPocetVyhernych = Hra.kontrolaCislo(this.input);
+        }
+        this.pocetVyhernych = novyPocetVyhernych;
+    }
+    
+    /**
+     * Metóda nastavuje koľko políčok od hráča následujúcich za sebou musí byť pre výhru kola.
+     */
+    private void setPocetPolicokZaSebou() {
+        System.out.print("Koľko políčok za sebou musí byť v rade pre výhru: ");
+        int novyPocetPolicokZaSebou = Hra.kontrolaCislo(this.input);
+        while (novyPocetPolicokZaSebou < 3 || novyPocetPolicokZaSebou > this.hraciaPlocha.getVelkostPlochy() - 1) {
+            System.out.println("Musíte zadať číslo, ktoré je väčšie ako 2 a menšie alebo rovné ako veľkosť plochy.");
+            System.out.print("Koľko políčok za sebou musí byť v rade pre výhru: ");
+            novyPocetPolicokZaSebou = Hra.kontrolaCislo(this.input);
+        }
+        this.hraciaPlocha = new HraciaPlocha(this.hraciaPlocha.getVelkostPlochy() - 1, novyPocetPolicokZaSebou);
+        this.hraciaPlocha.setPolicka();
+    }
+    
+    /**
+     * Metóda nastavuje veľkosť hracej plochy.
+     */
+    private void setVelkostPlochy() {
+        System.out.print("Veľkosť hracej plochy: ");
+        int novaVelkostPlochy = Hra.kontrolaCislo(this.input);
+        while ((novaVelkostPlochy < 3 || novaVelkostPlochy > 9) || (this.hraciaPlocha.getPocetPolicokZaSebou() > novaVelkostPlochy)) {
+            if (this.hraciaPlocha.getPocetPolicokZaSebou() > novaVelkostPlochy && novaVelkostPlochy > 2) {
+                System.out.format("Konkrétna hodnota počtu výherných políčok následujúcich za sebou je: %s%n", this.hraciaPlocha.getPocetPolicokZaSebou());
+            }
+            System.out.format("Musíte zadať číslo väčšie ako 2 a menšie ako 10%n a zároveň číslo nesmie byť menšie ako počet výherných políčok za sebou.%n");
+            System.out.print("Veľkosť hracej plochy: ");
+            novaVelkostPlochy = Hra.kontrolaCislo(this.input);
+        }
+        this.hraciaPlocha = new HraciaPlocha(novaVelkostPlochy, this.hraciaPlocha.getPocetPolicokZaSebou());
+        this.hraciaPlocha.setPolicka();
     }
     
     /**
@@ -176,11 +223,11 @@ public class Hra {
          * takto sa stále bude pýtať na nové číslo a bude ho kontrolovať
          */
         System.out.println("Riadok: ");
-        int riadok = this.kontrolaCislo(this.input);
+        int riadok = Hra.kontrolaCislo(this.input);
         while (riadok < 1 || riadok > this.hraciaPlocha.getVelkostPlochy() - 1) {
             System.out.println("Musíte zadať číslo, ktoré bude väčšie ako 0\na zároveň nebude väčšie ako je veľkosť hracej plochy.");
             System.out.println("Riadok: ");
-            riadok = this.kontrolaCislo(this.input);
+            riadok = Hra.kontrolaCislo(this.input);
         }
     
         /* 
@@ -189,11 +236,11 @@ public class Hra {
          * takto sa stále bude pýtať na nové číslo a bude ho kontrolovať
          */
         System.out.println("Stĺpec: ");
-        int stlpec = this.kontrolaCislo(this.input);
+        int stlpec = Hra.kontrolaCislo(this.input);
         while (stlpec < 1 || stlpec > this.hraciaPlocha.getVelkostPlochy() - 1) {
             System.out.println("Musíte zadať číslo, ktoré bude väčšie ako 0\na zároveň nebude väčšie ako je veľkosť hracej plochy.");
             System.out.println("Stĺpec: ");
-            stlpec = this.kontrolaCislo(this.input);
+            stlpec = Hra.kontrolaCislo(this.input);
         }
     
         this.hraciaPlocha.setPolicko(riadok, stlpec, this.hraci.get(idHrac));
@@ -433,41 +480,15 @@ public class Hra {
                 this.nastaveniaHry();
                 break;
             case 'p': 
-                System.out.print("Na koľko výherných kôl chcete hrať: ");
-                int novyPocetVyhernych = Hra.kontrolaCislo(this.input);
-                while (novyPocetVyhernych < 1) {
-                    System.out.println("Musíte zadať číslo, ktoré je väčšie ako 0.");
-                    System.out.print("Na koľko výherných kôl chcete hrať: ");
-                    novyPocetVyhernych = Hra.kontrolaCislo(this.input);
-                }
-                this.pocetVyhernych = novyPocetVyhernych;
+                this.setPocetVyhernychKol();
                 this.nastaveniaHry();
                 break;
             case 's':
-                System.out.print("Koľko políčok za sebou musí byť v rade pre výhru: ");
-                int novyPocetPolicokZaSebou = Hra.kontrolaCislo(this.input);
-                while (novyPocetPolicokZaSebou < 3 || novyPocetPolicokZaSebou > this.hraciaPlocha.getVelkostPlochy() - 1) {
-                    System.out.println("Musíte zadať číslo, ktoré je väčšie ako 2 a menšie alebo rovné ako veľkosť plochy.");
-                    System.out.print("Koľko políčok za sebou musí byť v rade pre výhru: ");
-                    novyPocetPolicokZaSebou = Hra.kontrolaCislo(this.input);
-                }
-                this.hraciaPlocha = new HraciaPlocha(this.hraciaPlocha.getVelkostPlochy() - 1, novyPocetPolicokZaSebou);
-                this.hraciaPlocha.setPolicka();
+                this.setPocetPolicokZaSebou();
                 this.nastaveniaHry();
                 break;
             case 'v':
-                System.out.print("Veľkosť hracej plochy: ");
-                int novaVelkostPlochy = Hra.kontrolaCislo(this.input);
-                while ((novaVelkostPlochy < 3 || novaVelkostPlochy > 9) || (this.hraciaPlocha.getPocetPolicokZaSebou() > novaVelkostPlochy)) {
-                    if (this.hraciaPlocha.getPocetPolicokZaSebou() > novaVelkostPlochy && novaVelkostPlochy > 2) {
-                        System.out.format("Konkrétna hodnota počtu výherných políčok následujúcich za sebou je: %s%n", this.hraciaPlocha.getPocetPolicokZaSebou());
-                    }
-                    System.out.format("Musíte zadať číslo väčšie ako 2 a menšie ako 10%n a zároveň číslo nesmie byť menšie ako počet výherných políčok za sebou.%n");
-                    System.out.print("Veľkosť hracej plochy: ");
-                    novaVelkostPlochy = Hra.kontrolaCislo(this.input);
-                }
-                this.hraciaPlocha = new HraciaPlocha(novaVelkostPlochy, this.hraciaPlocha.getPocetPolicokZaSebou());
-                this.hraciaPlocha.setPolicka();
+                this.setVelkostPlochy();
                 this.nastaveniaHry();
                 break;
             case 'b':
