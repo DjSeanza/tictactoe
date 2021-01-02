@@ -403,7 +403,7 @@ public class Hra {
                 System.out.format("Počet Hráčov: %s%n", novyPocetHracov);
                 System.out.format("Znaky hráčov: ");
                 if (scanner.hasNext()) {
-                    for (int i = 0; i < this.pocetHracov; i++) {
+                    for (int i = 0; i < novyPocetHracov; i++) {
                         char znak = scanner.next().charAt(0);
                         System.out.format("(%s), ", znak);
                     }
@@ -412,7 +412,7 @@ public class Hra {
                 
                 System.out.format("Výhry hráčov: ");
                 if (scanner.hasNextInt()) {
-                    for (int i = 0; i < this.pocetHracov; i++) { 
+                    for (int i = 0; i < novyPocetHracov; i++) { 
                         int pocetBodov = scanner.nextInt();
                         System.out.format("(%d), ", pocetBodov);
                     }
