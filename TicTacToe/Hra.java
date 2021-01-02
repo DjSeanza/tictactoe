@@ -13,6 +13,7 @@ import java.util.Scanner;
 * @version 1.1.3
 */
 public class Hra {
+    private final int POCET_ULOZNYCH_SLOTOV = 3;
     private ArrayList<Hrac> hraci;
     private ArrayList<Hrac> vyherci;
     
@@ -70,6 +71,23 @@ public class Hra {
             input.next();
         }
         return input.nextInt();
+    }
+    
+    /**
+     * Metóda kontroluje, či používateľ zadal správne číslo úložného priestoru.
+     * 
+     * @param otazka určuje akú otázku sa chceme opýtať pred výberom úložného súboru
+     * @return int vráti číselnú hodnotu úložného priestoru
+     */
+    private int kontrolaPocetUloznychSuborov(String otazka) {
+        System.out.print(otazka);
+        int slot = Hra.kontrolaCislo(this.input);
+        while (slot < 1 || slot > this.POCET_ULOZNYCH_SLOTOV) {
+            System.out.format("Musíte zadať číslo slotu, do ktorého chcete hru uložiť.%n");
+            System.out.print(otazka + " ");
+            slot = Hra.kontrolaCislo(this.input);
+        }
+        return slot;
     }
     
     /**
@@ -591,55 +609,23 @@ public class Hra {
         boolean podariloSa = false;
         
         if (idemUlozit) {
-            System.out.println("Kde si hru prajete uložiť?");
-            System.out.format("Slot 1%n");
-            this.vypisZoSuboru("save1.txt");
-            System.out.format("Slot 2%n");
-            this.vypisZoSuboru("save2.txt");
-            System.out.format("Slot 3%n");
-            this.vypisZoSuboru("save3.txt");
-            
-            int slot = Hra.kontrolaCislo(this.input);
-            switch (slot) {
-                case 1:
-                    podariloSa = this.ulozDoSuboru("save1.txt");
-                    break;
-                case 2:
-                    podariloSa = this.ulozDoSuboru("save2.txt");
-                    break;
-                case 3:
-                    podariloSa = this.ulozDoSuboru("save3.txt");
-                    break;
-                default:
-                    System.out.format("Musíte zadať číslo slotu, do ktorého chcete hru uložiť.%n");
-                    this.vyberSave(true);
-                    break;
+            for (int i = 1; i <= this.POCET_ULOZNYCH_SLOTOV; i++) {
+                System.out.format("Slot %s%n", i);
+                this.vypisZoSuboru("save" + i + ".txt");
             }
+            
+            int slot = this.kontrolaPocetUloznychSuborov("Kde si hru prajete uložiť?");
+            
+            podariloSa = this.ulozDoSuboru("save" + slot + ".txt");
         } else {
-            System.out.println("Ktorú hru si prajete načítať?");
-            System.out.format("Slot 1%n");
-            this.vypisZoSuboru("save1.txt");
-            System.out.format("Slot 2%n");
-            this.vypisZoSuboru("save2.txt");
-            System.out.format("Slot 3%n");
-            this.vypisZoSuboru("save3.txt");
-            
-            int slot = Hra.kontrolaCislo(this.input);
-            switch (slot) {
-                case 1:
-                    podariloSa = this.nacitajZoSuboru("save1.txt");
-                    break;
-                case 2:
-                    podariloSa = this.nacitajZoSuboru("save2.txt");
-                    break;
-                case 3:
-                    podariloSa = this.nacitajZoSuboru("save3.txt");
-                    break;
-                default:
-                    System.out.format("Musíte zadať číslo slotu, do ktorého chcete hru uložiť.%n");
-                    this.vyberSave(false);
-                    break;
+            for (int i = 1; i <= this.POCET_ULOZNYCH_SLOTOV; i++) {
+                System.out.format("Slot %s%n", i);
+                this.vypisZoSuboru("save" + i + ".txt");
             }
+            
+            int slot = this.kontrolaPocetUloznychSuborov("Ktorú hru si prajete načítať?");
+            
+            podariloSa = this.nacitajZoSuboru("save" + slot + ".txt");
         }
         
         return podariloSa;
