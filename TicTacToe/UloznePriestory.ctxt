@@ -1,0 +1,22 @@
+#BlueJ class context
+comment0.target=UloznePriestory
+comment0.text=\r\n\ Trieda\ sl\u00FA\u017Ei\ na\ pr\u00E1cu\ s\ \u00FAlo\u017En\u00FDmi\ priestormi\ pre\ hru.\ Ur\u010Duje\ kde\ sa\ bude\ hra\ uklada\u0165\ a\ z\ ktor\u00E9ho\ s\u00FAboru\ sa\ bude\ hra\ na\u010D\u00EDtava\u0165.\r\n\ \r\n\ @author\ Patrik\ I\u0161tvanko\ \r\n\ @version\ 1.0.0\r\n
+comment1.params=
+comment1.target=UloznePriestory()
+comment1.text=\r\n\ Kon\u0161truktor\ nastav\u00ED\ z\u00E1kladn\u00E9\ atrib\u00FAty\ triedy\r\n
+comment2.params=otazka
+comment2.target=int\ kontrolaPocetUloznychSuborov(java.lang.String)
+comment2.text=\r\n\ Met\u00F3da\ kontroluje,\ \u010Di\ pou\u017E\u00EDvate\u013E\ zadal\ spr\u00E1vne\ \u010D\u00EDslo\ \u00FAlo\u017En\u00E9ho\ priestoru.\r\n\ \r\n\ @param\ otazka\ ur\u010Duje\ ak\u00FA\ ot\u00E1zku\ sa\ chceme\ op\u00FDta\u0165\ pred\ v\u00FDberom\ \u00FAlo\u017En\u00E9ho\ s\u00FAboru\r\n\ @return\ int\ vr\u00E1ti\ \u010D\u00EDseln\u00FA\ hodnotu\ \u00FAlo\u017En\u00E9ho\ priestoru\r\n
+comment3.params=suborNaCitanie
+comment3.target=void\ vypisZoSuboru(java.lang.String)
+comment3.text=\r\n\ Met\u00F3da\ vypisuje\ \u00FAdaje,\ ktor\u00E9\ si\ na\u010D\u00EDta\ zo\ s\u00FAboru\r\n\ \r\n\ @param\ suborNaCitanie\ ur\u010Duje\ s\u00FAbor,\ z\ ktor\u00E9ho\ chceme\ d\u00E1ta\ \u010D\u00EDta\u0165\r\n
+comment4.params=suborNaUlozenie
+comment4.target=boolean\ ulozDoSuboru(java.lang.String)
+comment4.text=\r\n\ Met\u00F3da\ uklad\u00E1\ pr\u00E1ve\ prebiehaj\u00FAcu\ hru\ do\ s\u00FAboru.\r\n\ \r\n\ @param\ suborNaUlozenie\ n\u00E1zov\ a\ pr\u00EDpona\ s\u00FAboru\ do\ ktor\u00E9ho\ chceme\ d\u00E1ta\ zap\u00EDsa\u0165\r\n
+comment5.params=suborNaCitanie
+comment5.target=boolean\ nacitajZoSuboru(java.lang.String)
+comment5.text=\r\n\ Met\u00F3da\ na\u010D\u00EDtava\ ulo\u017Een\u00E9\ d\u00E1ta\ zo\ s\u00FAboru.\r\n\ \r\n\ @param\ suborNaCitanie\ ur\u010Duje\ s\u00FAbor,\ z\ ktor\u00E9ho\ chceme\ d\u00E1ta\ \u010D\u00EDta\u0165\r\n
+comment6.params=idemUlozit
+comment6.target=boolean\ vyberSave(boolean)
+comment6.text=\r\n\ Met\u00F3da\ pre\ v\u00FDber\ \u00FAlo\u017En\u00E9ho\ priestoru.\ V\ tejto\ met\u00F3de\ sa\ vyp\u00ED\u0161u\ v\u0161etky\ mo\u017En\u00E9\ \u00FAlo\u017En\u00E9\ sloty\r\n\ a\ m\u00F4\u017Eeme\ si\ vybra\u0165\ do\ ktor\u00E9ho\ s\u00FAboru\ budeme\ pokrok\ v\ hre\ uklada\u0165\ alebo\ z\ ktor\u00E9ho\ s\u00FAboru\r\n\ budeme\ pokrok\ v\ hre\ na\u010D\u00EDtava\u0165.\r\n\ \r\n\ @param\ idemUlozit\ ur\u010Duje\ \u010Di\ budem\ do\ s\u00FAboru\ uklada\u0165\ (true)\ alebo\ budem\ zo\ suboru\ na\u010D\u00EDtava\u0165\ (false)\r\n
+numComments=7
