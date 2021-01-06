@@ -163,7 +163,7 @@ public class Hra {
     }
     
     /**
-     * Metóda pridáva hráčov do hry.
+     * Metóda pridáva hráčov do hry. Ak je hráč len jeden automaticky pridá bota.
      * 
      * @param jeVKonstruktore určuje, či sa pridávanie hráčov nachádza v konštruktore
      * @return boolean vráti hodnotu true ak sa hráč úspešne pridal
@@ -236,8 +236,8 @@ public class Hra {
     
     /**
      * Opýtame sa hráča na riadok a stĺpec, do ktorého chce znak
-     * napísať a následne ho tam napíšeme pomocou metódy setPolicko()
-     * v triede HraciaPlocha. Metóda sa opakuje dokým sa nezadá 
+     * napísať a následne ho tam napíšeme.
+     * Metóda sa opakuje dokým sa nezadá 
      * korektné číslo riadku a stĺpca.
      * 
      * @param hrac konkrétny hráč, pre ktorého chceme nastaviť 
@@ -245,6 +245,14 @@ public class Hra {
      */
     private void setPolickoPreHraca(int idHrac) {
         System.out.println("Kolo hráča " + (idHrac + 1) + " (" + this.hraci.get(idHrac).getZnak() + ").");
+        
+        /*
+         * Ak je kolo bota, tak sa vykoná metóda setPolickoPreBota a následne sa táto metóda ukončí.
+         */
+        if (this.hraci.get(idHrac).getJeBot()) {
+            this.setPolickoPreBota();
+            return;
+        }
     
         /* 
          * kontroluje či je zadané číslo a či je zadané správne
@@ -282,6 +290,22 @@ public class Hra {
         if (!this.hraciaPlocha.jePolickoZadaneSpravne()) {
             this.setPolickoPreHraca(idHrac);
         }
+    }
+    
+    /**
+     * Metóda slúži na zadanie políčka pre bota.
+     */
+    private void setPolickoPreBota() {
+        Random random = new Random();
+        
+        do {
+            int randomCisloRiadok = random.nextInt(this.hraciaPlocha.getVelkostPlochy());
+            int randomCisloStlpec = random.nextInt(this.hraciaPlocha.getVelkostPlochy());
+            System.out.format("(%d %d)%n", randomCisloRiadok, randomCisloStlpec);
+            this.hraciaPlocha.setPolicko(randomCisloRiadok, randomCisloStlpec, this.hraci.get(1));
+        } while (!this.hraciaPlocha.jePolickoZadaneSpravne());
+                    
+        this.hraciaPlocha.vypisPlochu();
     }
     
     /**

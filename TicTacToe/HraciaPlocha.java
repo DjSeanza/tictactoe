@@ -51,7 +51,7 @@ public class HraciaPlocha {
      * @param stlpec stĺpec v ktorom budeme kontrolovať bunku
      * @return boolean vráti hodnotu true ak daná bunka obsahuje znak daného hráča
      */
-    private boolean vyhraBunka(Hrac hrac, int riadok, int stlpec) {
+    public boolean vyhraBunka(Hrac hrac, int riadok, int stlpec) {
         return this.hraciaPlocha[riadok][stlpec] == hrac.getZnak();
     }
     
