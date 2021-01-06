@@ -19,6 +19,19 @@ public class HraciaPlocha {
      * @param pocetPolicokZaSebou určuje na koľko výherných políčok sa bude hrať
      */
     public HraciaPlocha(int velkost, int pocetPolicokZaSebou) {
+        if (velkost > 2 && velkost < 10) {
+            // kvôli riadku a stĺpcu s číslami musíme pričítať ešte jeden riadok a stĺpec
+            this.velkostPlochy = velkost + 1;
+        } else {
+            this.velkostPlochy = 4;
+        }
+
+        if (pocetPolicokZaSebou > 2 && pocetPolicokZaSebou <= velkost) {
+            this.pocetPolicokZaSebou = pocetPolicokZaSebou;
+        } else {
+            this.pocetPolicokZaSebou = 3;
+        }
+        
         this.velkostPlochy = velkost + 1;
         this.pocetPolicokZaSebou = pocetPolicokZaSebou;
         this.zadaneSpravne = true;

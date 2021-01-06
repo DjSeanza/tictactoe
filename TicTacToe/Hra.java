@@ -13,17 +13,18 @@ import java.util.Scanner;
 * @version 1.1.3
 */
 public class Hra {
-    private final int POCET_ULOZNYCH_SLOTOV = 3;
+    private static final int POCET_ULOZNYCH_SLOTOV = 3;
+    
     private ArrayList<Hrac> hraci;
     private ArrayList<Hrac> vyherci;
     
     private HraciaPlocha hraciaPlocha;
     private Hrac vyhercaKola;
+    private Scanner input;
+    
     private int pocetHracov;
     private int pocetVyhernych;
     private boolean koniecHry;
-    
-    private Scanner input;
     
     /**
      * Inicializujeme si základné hodnoty atribútov,
@@ -38,8 +39,21 @@ public class Hra {
      * @param pocetVyhernych určuje na koľko výherných bodov sa hrá
      * 
      * @TODO - urobiť bota
+     * @TODO - skontrolovať kontroly v konštruktore
      */
-    public Hra(int velkost, int pocetPolicokZaSebou, int pocetHracov, int pocetVyhernych) { 
+    public Hra(int velkost, int pocetPolicokZaSebou, int pocetHracov, int pocetVyhernych) {
+        if (pocetHracov < 1 || pocetHracov > velkost - 1) {
+            this.pocetHracov = 1;
+        } else {
+            this.pocetHracov = pocetHracov;
+        }
+
+        if (pocetVyhernych < 0) {
+            this.pocetVyhernych = 3;
+        } else {
+            this.pocetVyhernych = pocetVyhernych;
+        }
+        
         this.input = new Scanner(System.in);
         this.pocetHracov = pocetHracov;
         this.pocetVyhernych = pocetVyhernych;
@@ -55,6 +69,17 @@ public class Hra {
             while (!jePridany) {
                 jePridany = this.pridajHraca(true);
             }
+        }
+        
+        if (this.hraci.size() == 1) {
+            
+            if (this.hraci.get(0).getZnak() == 'x') {
+                this.hraci.add(new Hrac('o', true));
+            } else {
+                this.hraci.add(new Hrac('x', true));
+            }
+            
+            this.pocetHracov++;
         }
     }
     
@@ -82,7 +107,7 @@ public class Hra {
     private int kontrolaPocetUloznychSuborov(String otazka) {
         System.out.print(otazka + " ");
         int slot = Hra.kontrolaCislo(this.input);
-        while (slot < 1 || slot > this.POCET_ULOZNYCH_SLOTOV) {
+        while (slot < 1 || slot > Hra.POCET_ULOZNYCH_SLOTOV) {
             System.out.format("Musíte zadať číslo slotu, do ktorého chcete hru uložiť.%n");
             System.out.print(otazka + " ");
             slot = Hra.kontrolaCislo(this.input);
@@ -169,7 +194,11 @@ public class Hra {
             if (!jeVKonstruktore) {
                 this.pocetHracov++;
             }
-            return this.hraci.add(new Hrac(znak));
+            if (this.hraci.size() > 0 && this.hraci.get(1).getJeBot()) {
+                this.pocetHracov--;
+                this.hraci.remove(1);
+            }
+            return this.hraci.add(new Hrac(znak, false));
         }
     
         return false;
@@ -374,9 +403,19 @@ public class Hra {
     private void vypisNastavenychHodnot() {
         System.out.format("Počet Hráčov: %s%n", this.pocetHracov);
         System.out.format("Znaky hráčov: ");
-        
         for (int i = 0; i < this.pocetHracov; i++) {
             System.out.format("(%s), ", this.hraci.get(i).getZnak());
+        }
+        System.out.println();
+        
+        System.out.format("Je hráč bot: ");
+        for (int i = 0; i < this.pocetHracov; i++) {
+            if (this.hraci.get(i).getJeBot()) {
+                System.out.format("(á), ");
+            } else {
+                System.out.format("(n), ");
+            }
+            
         }
         System.out.println();
         
@@ -403,7 +442,7 @@ public class Hra {
                 System.out.format("Počet Hráčov: %s%n", novyPocetHracov);
                 System.out.format("Znaky hráčov: ");
                 if (scanner.hasNext()) {
-                    for (int i = 0; i < this.pocetHracov; i++) {
+                    for (int i = 0; i < novyPocetHracov; i++) {
                         char znak = scanner.next().charAt(0);
                         System.out.format("(%s), ", znak);
                     }
@@ -412,12 +451,26 @@ public class Hra {
                 
                 System.out.format("Výhry hráčov: ");
                 if (scanner.hasNextInt()) {
-                    for (int i = 0; i < this.pocetHracov; i++) { 
+                    for (int i = 0; i < novyPocetHracov; i++) { 
                         int pocetBodov = scanner.nextInt();
                         System.out.format("(%d), ", pocetBodov);
                     }
                 }
                 System.out.println(); 
+                
+                System.out.format("Je hráč bot: ");
+                if (scanner.hasNextBoolean()) {
+                    for (int i = 0; i < novyPocetHracov; i++) { 
+                        boolean novyJeBot = scanner.nextBoolean();
+                        if (novyJeBot) {
+                            System.out.format("(á), ");
+                        } else {
+                            System.out.format("(n), ");
+                        }
+                        
+                    }
+                }
+                System.out.println();
                 
                 System.out.format("Počet výherných kôl pre výhru: %d%n", novyPocetVyhernych);
                 System.out.format("Počet políčok za sebou pre výhru: %d%n", novyPocetPolicokZaSebou);
@@ -536,6 +589,11 @@ public class Hra {
             writer.format("%s ", this.hraci.get(i).getPocetVyhier());
         }
         
+        writer.println();
+        for (int i = 0; i < this.pocetHracov; i++) {
+            writer.format("%s ", this.hraci.get(i).getJeBot());
+        }
+        
         writer.close();
         return true;
     }
@@ -544,6 +602,8 @@ public class Hra {
      * Metóda načítava uložené dáta zo súboru.
      * 
      * @param suborNaCitanie určuje súbor, z ktorého chceme dáta čítať
+     * 
+     * @TODO - dať aj možnosť zrušiť načítanie a vrátiť sa do menu
      */
     private boolean nacitajZoSuboru(String suborNaCitanie) throws IOException {
         File subor = new File("saves/" + suborNaCitanie);
@@ -586,7 +646,7 @@ public class Hra {
                 if (scanner.hasNext()) {
                     for (int i = 0; i < this.pocetHracov; i++) {
                         char znak = scanner.next().charAt(0);
-                        this.hraci.add(new Hrac(znak));
+                        this.hraci.add(new Hrac(znak, false));
                     }
                 }
                 
@@ -601,6 +661,14 @@ public class Hra {
                         for (int j = 0; j < pocetBodov; j++) {
                             this.hraci.get(i).pridajVyhru();
                         }
+                    }
+                }
+                
+                if (scanner.hasNextBoolean()) {
+                    for (int i = 0; i < this.pocetHracov; i++) { 
+                        boolean novyJeBot = scanner.nextBoolean();
+                        
+                        this.hraci.get(i).setBot(novyJeBot);
                     }
                 }
                 
@@ -630,7 +698,7 @@ public class Hra {
         boolean podariloSa = false;
         
         if (idemUlozit) {
-            for (int i = 1; i <= this.POCET_ULOZNYCH_SLOTOV; i++) {
+            for (int i = 1; i <= Hra.POCET_ULOZNYCH_SLOTOV; i++) {
                 System.out.format("Slot %s%n", i);
                 this.vypisZoSuboru("save" + i + ".txt");
             }
@@ -639,7 +707,7 @@ public class Hra {
             
             podariloSa = this.ulozDoSuboru("save" + slot + ".txt");
         } else {
-            for (int i = 1; i <= this.POCET_ULOZNYCH_SLOTOV; i++) {
+            for (int i = 1; i <= Hra.POCET_ULOZNYCH_SLOTOV; i++) {
                 System.out.format("Slot %s%n", i);
                 this.vypisZoSuboru("save" + i + ".txt");
             }
