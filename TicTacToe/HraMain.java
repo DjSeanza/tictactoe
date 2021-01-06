@@ -33,8 +33,8 @@ public class HraMain {
         
         System.out.print("Počet hráčov: ");
         int pocetHracov = Hra.kontrolaCislo(input);
-        while (pocetHracov < 2 || pocetHracov > velkost - 1) {
-            System.out.println("Musíte zadať číslo, ktoré je väčšie ako 1 a menšie ako veľkosť plochy zmenšenej o jednu jednotku.");
+        while (pocetHracov < 1 || pocetHracov > velkost - 1) {
+            System.out.println("Musíte zadať číslo, ktoré je väčšie ako 0 a menšie ako veľkosť plochy zmenšenej o jednu jednotku.");
             System.out.print("Počet hráčov: ");
             pocetHracov = Hra.kontrolaCislo(input);
         }
