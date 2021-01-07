@@ -47,7 +47,7 @@ public class HraMain {
             pocetVyhernych = Hra.kontrolaCislo(input);
         }
         
-        Hra hra = new Hra(velkost, pocetPolicokZaSebou, pocetHracov, pocetVyhernych);
+        Hra hra = Hra.zacniHru(velkost, pocetPolicokZaSebou, pocetHracov, pocetVyhernych);
         
         hra.menuHry();
     }
