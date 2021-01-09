@@ -2,7 +2,7 @@
  * Táto trieda slúži na základnú prácu s hracou plochou, t.j. výpis plochy, nastavovanie hodnoty daným políčkam a pod. 
  * 
  * @author Patrik Ištvanko
- * @version 1.0.5
+ * @version 1.0.0
  */
 public class HraciaPlocha {
     private char[][] hraciaPlocha;

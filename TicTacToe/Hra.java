@@ -1,7 +1,5 @@
 import java.util.ArrayList; 
-import java.io.File;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.Random; 
 import java.util.Scanner;
 
@@ -10,7 +8,7 @@ import java.util.Scanner;
 * pričítava body hráčom a obsahuje základné nastavenia hry.
 * 
 * @author Patrik Ištvanko
-* @version 1.1.3
+* @version 1.0.0
 */
 public class Hra {
     private static Hra instanciaHry = null;
@@ -21,7 +19,6 @@ public class Hra {
     private HraciaPlocha hraciaPlocha;
     private Hrac vyhercaKola;
     private Scanner input;
-    private UloznePriestory uloznyPriestor;
     
     private int pocetHracov;
     private int pocetVyhernych;
@@ -126,18 +123,30 @@ public class Hra {
         return input.nextInt();
     }
     
+    /**
+     * @return int vráti počet hráčov.
+     */
     public int getPocetHracov() {
         return this.pocetHracov;
     }
     
+    /**
+     * @return int vráti počet výherných kôl
+     */
     public int getPocetVyhernych() {
         return this.pocetVyhernych;
     }
     
+    /**
+     * @return HraciaPlocha vráti hraciu plochu
+     */
     public HraciaPlocha getHraciaPlocha() {
         return this.hraciaPlocha;
     }
     
+    /**
+     * @return ArrayList<Hrac> vráti všetkých hráčov
+     */
     public ArrayList<Hrac> getHraci() {
         return this.hraci;
     }
@@ -511,6 +520,7 @@ public class Hra {
         System.out.println("Čo si prajete urobiť?");
         System.out.println("Pridať hráča (a)\nOdstrániť hráča (d)\nZmeniť počet výherných (p)\nZmeniť počet políčok za sebou (s)\nZmeniť veľkosť plochy (v)\nSpäť (b)\n");
         char znak = this.input.next().charAt(0);
+        znak = Character.toLowerCase(znak);
     
         switch (znak) {
             case 'a':
@@ -547,11 +557,12 @@ public class Hra {
      * (Pokračovať, Pridať hráča, Odstrániť hráča, Uložiť, Ukončiť)
      */
     private void moznostiHry() throws IOException {
-        UloznePriestory up = new UloznePriestory();
+        UloznePriestory up = UloznePriestory.getUloznePriestory();
         
         System.out.println("Čo si prajete urobiť?");
         System.out.println("Pokračovať (c)\nUložiť (s)\nVrátiť sa do menu (m)\nUkončiť (e)\n");
         char znak = this.input.next().charAt(0);
+        znak = Character.toLowerCase(znak);
 
         switch (znak) {
             case 'c':
@@ -640,12 +651,13 @@ public class Hra {
      * (Nová hra, Pokračovať v uloženej hre, Nastavenia, Ukončiť hru)
      */
     public void menuHry() throws IOException {
-        UloznePriestory up = new UloznePriestory();
+        UloznePriestory up = UloznePriestory.getUloznePriestory();
         
         System.out.println("Čo si prajete urobiť?");
         System.out.println("Nová hra (n)\nPokračovať v uloženej hre (c)\nNastavenia (o)\nUkončiť hru (e)\n");
         char znak = this.input.next().charAt(0);
-
+        znak = Character.toLowerCase(znak);
+        
         switch (znak) {
             case 'n':
                 for (int i = 0; i < this.pocetHracov; i++) {

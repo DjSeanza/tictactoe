@@ -5,13 +5,15 @@ import java.io.PrintWriter;
 import java.util.Scanner;
 
 /**
- * Write a description of class UloznePriestory here.
+ * Trieda sa používa na prácu so súbormi. Dokážeme súbory
+ * načítavať, ukladať, vypisovať.
  * 
- * @author (your name) 
- * @version (a version number or a date)
+ * @author Patrik Ištvanko 
+ * @version 1.0.0
  */
 public class UloznePriestory {
     private static final int POCET_ULOZNYCH_SLOTOV = 3;
+    private static UloznePriestory instanciaUloznePriestory = null;
     
     private ArrayList<Hrac> hraci;
     
@@ -22,7 +24,10 @@ public class UloznePriestory {
     private int pocetHracov;
     private int pocetVyhernych;
     
-    public UloznePriestory() {
+    /**
+     * Konštruktor nastaví základné atribúty.
+     */
+    private UloznePriestory() {
         this.input = new Scanner(System.in);
         this.hra = Hra.getInstancia();
         
@@ -30,6 +35,18 @@ public class UloznePriestory {
         this.pocetVyhernych = this.hra.getPocetVyhernych();
         this.hraciaPlocha = this.hra.getHraciaPlocha();
         this.hraci = this.hra.getHraci();
+    }
+    
+    /**
+     * Metóda pre vytvorenie alebo získanie inštancie úložných priestorov.
+     * 
+     * @return UloznePriestory vráti úložné priestory hry
+     */
+    public static UloznePriestory getUloznePriestory() {
+        if (UloznePriestory.instanciaUloznePriestory == null) {
+            UloznePriestory.instanciaUloznePriestory = new UloznePriestory();
+        }
+        return UloznePriestory.instanciaUloznePriestory;
     }
     
     /**
@@ -98,8 +115,6 @@ public class UloznePriestory {
      * Metóda načítava uložené dáta zo súboru.
      * 
      * @param suborNaCitanie určuje súbor, z ktorého chceme dáta čítať
-     * 
-     * @TODO - dať aj možnosť zrušiť načítanie a vrátiť sa do menu
      */
     private boolean nacitajZoSuboru(String suborNaCitanie) throws IOException {
         File subor = new File("saves/" + suborNaCitanie);
