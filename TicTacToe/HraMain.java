@@ -1,5 +1,5 @@
 import java.io.IOException; 
-import java.util.Scanner;
+import java.util.Scanner; 
  
 /**
  * Trieda main, ktorá spúšťa hru.

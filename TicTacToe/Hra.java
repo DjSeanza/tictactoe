@@ -1,7 +1,7 @@
 import java.util.ArrayList; 
 import java.io.IOException;
 import java.util.Random; 
-import java.util.Scanner;
+import java.util.Scanner; 
 
 /**
 * Táto trieda slúži na základnú prácu s hrou. Vytvára inštanciu hry, určuje výhry, 
